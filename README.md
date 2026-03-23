@@ -1,176 +1,85 @@
- 🚦 ML-Based Adaptive Network Congestion Controller
+<h1 align="center">Niyanta AI: Network Congestion Controller</h1>
 
-> **A systems + machine learning project that simulates network congestion, predicts it using ML, and dynamically controls traffic to reduce packet loss using a closed-loop feedback mechanism.**
+<p align="center">
+  <em>A Professional Full-Stack Engineering System simulating network traffic, predicting congestion via Machine Learning, and dynamically throttling load through a closed-loop WebSocket pipeline.</em>
+</p>
 
 ---
+
+## 📸 Dashboard Interface
+<p align="center">
+  <img src="file:///C:/Users/Bhumika%20Kumari/.gemini/antigravity/brain/d8de75f2-89b5-40a7-ac3e-e9917bd9e51b/niyanta_ai_full_dashboard_final_1774264669132.png" alt="Niyanta AI Dashboard UI" width="100%" />
+</p>
 
 ## 📌 Overview
+Traditional networks rely on static congestion control, reacting *after* congestion occurs. This project demonstrates how machine learning proactively controls network traffic to prevent congestion before packet loss hits the threshold.
 
-Traditional networks rely on **static congestion control**, reacting *after* congestion occurs.  
-This project demonstrates how **machine learning can proactively control network traffic** to prevent congestion **before packet loss happens**.
+This repository serves as a **production-ready engineering system**, migrating from a standard terminal script into a highly concurrent web architecture with elite ML engineering.
 
----
+## 🚀 Key Technical Features
+- **Concurrent Dual Simulation Engine**: Executes both Static and ML-Adaptive router models simultaneously on identical network streams for clear A/B comparison.
+- **Real-Time Data Streaming**: Replaced REST API polling with persistent **WebSockets** for zero-latency, sub-millisecond tick streaming.
+- **Isolated State Management**: Engineered connection-keyed in-memory instances enabling multiple clients to run completely isolated, synchronous simulations.
+- **Robust ML Pipeline**: Implementing Stratified Splitting, Scikit-Learn Pipelines with `StandardScaler`, and custom threshold `predict_proba()` routing to aggressively eliminate False Negatives.
+- **Time-Series Serialization**: Ability to save and replay simulation data vectors via JSON export logic in the frontend.
 
-## 🚀 What This System Does
-
-- Simulates real network congestion (queues, bandwidth, packet drops)
-- Generates its **own dataset** from system behavior
-- Trains an ML model to predict congestion
-- Uses ML predictions to **actively control traffic**
-- Achieves **>99% reduction in packet loss**
-
----
-
-## 🎯 Key Features
-
-- 📡 Network congestion simulation  
-- 📊 Automatic dataset generation  
-- 🤖 ML-based congestion prediction (**Logistic Regression**)  
-- 🔁 Closed-loop adaptive controller  
-- 📉 Static vs Adaptive system comparison  
-- ⚡ Lightweight, CPU-safe, reproducible  
+## 🧠 ML Integration & Action
+The backend imports a trained Logistic Regression pipeline dict (`congestion_model.pkl`).
+> The model acts as a native system policy engine evaluating features against a tunable 0.6 probability threshold to output incremental adjustments (e.g. `rate - 2` or `rate + 1`) instead of simple binary switches.
 
 ---
 
-## 🧠 System Architecture
+## ▶️ Getting Started (Step-by-Step Guide)
 
-### 🔹 High-Level Flow
+To run this complete full-stack project locally, follow these steps exactly:
 
-```mermaid
-flowchart LR
-    Traffic[Incoming Traffic] --> Router[Router Queue]
-    Router --> Stats[Network Statistics]
-    Stats --> ML[ML Congestion Predictor]
-    ML --> Decision{Congestion?}
-    Decision -->|Yes| Reduce[Reduce Traffic Rate]
-    Decision -->|No| Normal[Allow Normal Traffic]
-    Reduce --> Traffic
-    Normal --> Traffic
+### Phase 1: Environment & Machine Learning
+First, ensure your Python environment is active and the latest dataset/model is built.
+```bash
+# 1. Activate virtual environment
+.venv\Scripts\activate
 
-```
-🏗️ Project Structure
-ml-network-congestion/
-│
-├── simulator/
-│   ├── network_simulator.py      # Basic congestion simulation
-│   └── data_collector.py         # Dataset generation
-│
-├── data/
-│   └── network_data.csv          # Generated dataset
-│
-├── ml/
-│   ├── train_model.py            # ML training script
-│   └── congestion_model.pkl      # Trained ML model
-│
-├── controller/
-│   └── adaptive_controller.py    # ML-based adaptive controller
-│
-├── README.md
-└── .gitignore
-⚙️ Module Breakdown
-1️⃣ Network Simulation
-Models packet arrival, router queues, and bandwidth limits
-
-Simulates congestion and packet drops under heavy load
-
-2️⃣ Dataset Generation
-Extracted features from live simulation:
-
-Incoming packet rate
-
-Queue length
-
-Sent packets
-
-Dropped packets
-
-Congestion labels:
-
-0 → No congestion
-
-1 → Congestion
-
-3️⃣ Machine Learning Model
-Model: Logistic Regression
-
-Why Logistic Regression?
-
-Fast inference
-
-Low latency
-
-Interpretable
-
-Suitable for real-time systems
-
-The trained model is saved and reused for prediction (no retraining required).
-
-4️⃣ Adaptive Congestion Controller (Core Innovation)
-flowchart TD
-    Start[Simulation Running]
-    Start --> Collect[Collect Network Stats]
-    Collect --> Predict[ML Predicts Congestion]
-    Predict -->|Congested| Throttle[Reduce Incoming Traffic]
-    Predict -->|Clear| Allow[Allow Normal Traffic]
-    Throttle --> Continue[Continue Simulation]
-    Allow --> Continue
-This forms a closed-loop feedback control system.
-
-🧪 Experimental Results
-❌ Static System (No ML)
-Total packets dropped: 1188
-✅ ML-Adaptive System
-Total packets dropped: 10
-📉 Packet loss reduced by over 99%
-
-▶️ How to Run
-
-1️⃣ Activate virtual environment
-.\.venv\Scripts\activate
-
-2️⃣ Generate dataset
+# 2. Generate the dataset with BOTH classes cleanly distributed
 python simulator/data_collector.py
 
-3️⃣ Train ML model
+# 3. Train the new ML pipeline model (generates congestion_model.pkl)
 python ml/train_model.py
+```
 
-4️⃣ Run adaptive controller
-python controller/adaptive_controller.py
+### Phase 2: Start the Backend (FastAPI + WebSockets)
+Open a terminal and start the backend streaming server.
+```bash
+# 1. Activate environment
+.venv\Scripts\activate
 
-🧠 Why This Project Is Strong
-This project goes beyond ML prediction and demonstrates ML-driven system control.
+# 2. Install all requirements if you haven't yet
+pip install -r backend/requirements.txt
 
-You showcase:
+# 3. Start the internal WebSockets API Server
+uvicorn backend.main:app --reload
+# It will run on: http://127.0.0.1:8000
+```
 
-Core computer networks concepts
+### Phase 3: Start the UI (React + Vite)
+Open a **new separate terminal session** and start the UI.
+```bash
+# 1. Navigate to the fresh frontend directory
+cd frontend
 
-Machine learning in real systems
+# 2. Install Javascript dependencies
+npm install
 
-Feedback control loops
+# 3. Spin up the dev dashboard
+npm run dev
+```
+Navigate to the `http://localhost:5173` URL the Vite terminal outputs, configure your Load Profile, and click **Start**!
 
-Experimental comparison
+---
 
-Clean engineering practices (Git, modular design)
+## 📘 Deep System Architecture Documentation
+For deep-dive interview questions concerning State Flow, WebSocket Justification, Scalability, Concurrency, and ML Metrics, please see:  
+👉 **[DOCUMENTATION.md](./DOCUMENTATION.md)**
 
-📈 Future Enhancements
-Reinforcement Learning–based controller
-
-Multi-router / network topology simulation
-
-Software-Defined Networking (SDN) integration
-
-Real-time visualization dashboard
-
-Cloud traffic management use-cases
-
-👩‍💻 Author
-Bhumika Kumari
-B.Tech Computer Science & Engineering
-
-Focus: Machine Learning + Core CSE + Systems
-
-GitHub: https://github.com/Bhumika-0204
-
-⭐ Final Note
-This project is designed to reflect real-world ML + networking engineering, not just academic theory.
-If you found it useful, feel free to ⭐ star the repository.
+---
+👩‍💻 **Author**: Bhumika Kumari (B.Tech Computer Science & Engineering)  
+*Focus: Machine Learning + Core CSE + Systems Engineering*

@@ -1,7 +1,9 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
 import joblib
 
 # -------------------- LOAD DATA --------------------
@@ -19,26 +21,40 @@ y = data["congestion"]
 
 # -------------------- SPLIT --------------------
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.25, random_state=42
+    X, y, test_size=0.25, random_state=42, stratify=y
 )
 
-# -------------------- MODEL (LIGHTWEIGHT) --------------------
-model = LogisticRegression(
-    max_iter=200,
-    n_jobs=1  # keep CPU usage low
-)
+# -------------------- PREPROCESSING & MODEL --------------------
+# Using a Pipeline to scale features (LogReg is sensitive to scale)
+# class_weight="balanced" handles natural imbalance in congestion labels
+pipeline = Pipeline([
+    ("scaler", StandardScaler()),
+    ("model", LogisticRegression(max_iter=200, class_weight="balanced", n_jobs=1))
+])
 
 # -------------------- TRAIN --------------------
-model.fit(X_train, y_train)
+pipeline.fit(X_train, y_train)
 
 # -------------------- EVALUATE --------------------
-y_pred = model.predict(X_test)
+y_prob = pipeline.predict_proba(X_test)[:, 1]
+threshold = 0.6  # Tunable threshold to reduce false negatives
+y_pred = (y_prob >= threshold).astype(int)
+
 acc = accuracy_score(y_test, y_pred)
+roc_auc = roc_auc_score(y_test, y_prob)
 
 print("Accuracy:", acc)
+print("ROC-AUC Score:", roc_auc)
+print(f"Threshold used: {threshold}")
+print("\nConfusion Matrix:")
+print("Focus on false negatives (missing actual congestion events):")
+print(confusion_matrix(y_test, y_pred))
 print("\nClassification Report:\n")
 print(classification_report(y_test, y_pred))
 
-# -------------------- SAVE MODEL --------------------
-joblib.dump(model, "congestion_model.pkl")
-print("\nModel saved as congestion_model.pkl")
+# -------------------- SAVE TRAINED PIPELINE --------------------
+joblib.dump({
+    "model": pipeline,
+    "features": features
+}, "congestion_model.pkl")
+print("\nModel pipeline and feature metadata saved as congestion_model.pkl")
