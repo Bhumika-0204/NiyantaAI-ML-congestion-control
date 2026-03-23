@@ -1,8 +1,10 @@
-🚀 Niyanta AI — ML-Based Network Congestion Controller
+# Niyanta AI — ML-Based Network Congestion Controller
 
-A real-time, full-stack intelligent system that simulates network traffic, predicts congestion using machine learning, and dynamically adjusts packet flow through a closed-loop WebSocket architecture.
+> A real-time, full-stack intelligent system that simulates network traffic, predicts congestion using machine learning, and dynamically adjusts packet flow through a closed-loop WebSocket architecture.
+> 
+---
 
-📸 Dashboard Preview
+## 📸 Dashboard Preview
 🔹 Live Monitoring Dashboard
 
 (Add screenshot here)
@@ -23,47 +25,58 @@ A real-time, full-stack intelligent system that simulates network traffic, predi
 
 (Add screenshot here)
 
-📌 Overview
+## 📌 Overview
 
-Traditional network systems rely on reactive congestion control, responding only after congestion occurs.
+  *Traditional network systems rely on reactive congestion control, responding only after congestion occurs.
 
-Niyanta AI introduces a proactive approach:
+  * Niyanta AI introduces a proactive approach:
 
-Uses machine learning to detect early congestion signals and dynamically adjust traffic before packet loss escalates.
+  * Uses machine learning to detect early congestion signals and dynamically adjust traffic before packet loss escalates.
 
-This project transforms a basic simulation into a real-time engineering system combining:
+  * This project transforms a basic simulation into a real-time engineering system combining:
 
-🧠 ML-driven decision making
-⚡ WebSocket-based real-time streaming
-🌐 Full-stack architecture
-📊 Live system visualization
-🚀 Key Features
-🔄 Dual Simulation Engine
+ ---
+  
+## 🧠 ML-driven decision making
+ *⚡ WebSocket-based real-time streaming
+ *🌐 Full-stack architecture
+ *📊 Live system visualization
+
+ ---
+ 
+## 🚀 Key Features
+*🔄 Dual Simulation Engine
 Runs Static vs ML-Adaptive models simultaneously
 Ensures identical input → fair comparison
 Clearly demonstrates performance improvements
-⚡ Real-Time WebSocket Streaming
+*⚡ Real-Time WebSocket Streaming
 Eliminates REST polling
 Streams simulation ticks instantly
 Provides smooth, low-latency UI updates
-🧠 ML-Based Adaptive Control
+*🧠 ML-Based Adaptive Control
 Logistic Regression + StandardScaler pipeline
 Uses predict_proba() with threshold (0.6)
 Converts predictions into control actions:
 ⬇ Decrease rate → avoids congestion
 ⬆ Increase rate → maximizes throughput
-📊 Advanced Dashboard
-Live charts:
+
+---
+
+##📊 Advanced Dashboard
+*Live charts:
 Throughput
 Queue Load
 Packet Drops
-Key metrics:
+*Key metrics:
 📈 Throughput
 📉 Packet Loss %
 📊 Avg Queue Size
-Side-by-side comparison:
+*Side-by-side comparison:
 Static vs Adaptive
-🖥️ Terminal Diagnostics (Explainable AI)
+
+---
+
+## 🖥️ Terminal Diagnostics (Explainable AI)
 
 Real-time logs showing ML decisions:
 
@@ -72,7 +85,9 @@ Real-time logs showing ML decisions:
 
 👉 Provides transparency into system decisions
 
-💾 Replay System
+---
+
+## 💾 Replay System
 Export simulation data (JSON)
 Reload and replay runs in UI
 🧠 ML Integration
@@ -90,7 +105,10 @@ Low risk → increase rate (rate + 1)
 
 👉 Forms a closed-loop feedback controller
 
-⚙️ Tech Stack
+---
+
+
+## ⚙️ Tech Stack
 🔹 Backend
 FastAPI
 WebSockets
