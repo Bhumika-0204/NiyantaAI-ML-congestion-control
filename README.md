@@ -212,8 +212,11 @@ npm run dev
 
 
 
-##📘 Deep System Architecture Documentation For deep-dive interview questions concerning State Flow, WebSocket Justification, Scalability, Concurrency, and ML Metrics, please see: 👉 DOCUMENTATION.md
+## 📘 Documentation
 
+For detailed system design, architecture, and ML explanation:
+
+👉 **[View Full Documentation](./DOCUMENTATION.md)**
 ---
 
 ##📈 Results
