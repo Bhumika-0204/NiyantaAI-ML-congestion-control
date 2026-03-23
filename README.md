@@ -219,7 +219,7 @@ For detailed system design, architecture, and ML explanation:
 👉 **[View Full Documentation](./DOCUMENTATION.md)**
 ---
 
-##📈 Results
+## 📈 Results
 
 Under high-load simulation:
 
@@ -243,7 +243,7 @@ Under high-load simulation:
 
 ---
 
-##🧩 System-level thinking
+## 🧩 System-level thinking
 
 
 🚀 Deployment
