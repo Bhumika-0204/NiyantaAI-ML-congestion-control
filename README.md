@@ -69,7 +69,7 @@ Converts predictions into control actions:
 
 ---
 
-##📊 Advanced Dashboard
+## 📊 Advanced Dashboard
 
 
 Live charts:
