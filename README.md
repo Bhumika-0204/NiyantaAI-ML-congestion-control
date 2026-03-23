@@ -5,13 +5,23 @@ A real-time, full-stack intelligent system that simulates network traffic, predi
 📸 Dashboard Preview
 🔹 Live Monitoring Dashboard
 
+(Add screenshot here)
+
 🔹 Static vs Adaptive Comparison
+
+(Add screenshot here)
 
 🔹 ML Node Behavior
 
+(Add screenshot here)
+
 🔹 Terminal Diagnostics (Explainable AI)
 
+(Add screenshot here)
+
 🔹 ML Pipeline Architecture
+
+(Add screenshot here)
 
 📌 Overview
 
@@ -19,14 +29,14 @@ Traditional network systems rely on reactive congestion control, responding only
 
 Niyanta AI introduces a proactive approach:
 
-It uses machine learning to detect early congestion signals and dynamically adjust traffic before packet loss escalates.
+Uses machine learning to detect early congestion signals and dynamically adjust traffic before packet loss escalates.
 
 This project transforms a basic simulation into a real-time engineering system combining:
 
-ML-driven decision making
-WebSocket-based streaming
-full-stack architecture
-live system visualization
+🧠 ML-driven decision making
+⚡ WebSocket-based real-time streaming
+🌐 Full-stack architecture
+📊 Live system visualization
 🚀 Key Features
 🔄 Dual Simulation Engine
 Runs Static vs ML-Adaptive models simultaneously
@@ -35,20 +45,24 @@ Clearly demonstrates performance improvements
 ⚡ Real-Time WebSocket Streaming
 Eliminates REST polling
 Streams simulation ticks instantly
-Smooth, low-latency UI updates
+Provides smooth, low-latency UI updates
 🧠 ML-Based Adaptive Control
 Logistic Regression + StandardScaler pipeline
 Uses predict_proba() with threshold (0.6)
 Converts predictions into control actions:
-decrease rate (avoid congestion)
-increase rate (maximize throughput)
+⬇ Decrease rate → avoids congestion
+⬆ Increase rate → maximizes throughput
 📊 Advanced Dashboard
-Live charts (throughput, queue load, packet drops)
-Metrics:
+Live charts:
 Throughput
-Packet Loss %
-Avg Queue Size
-Side-by-side comparison (Static vs Adaptive)
+Queue Load
+Packet Drops
+Key metrics:
+📈 Throughput
+📉 Packet Loss %
+📊 Avg Queue Size
+Side-by-side comparison:
+Static vs Adaptive
 🖥️ Terminal Diagnostics (Explainable AI)
 
 Real-time logs showing ML decisions:
@@ -56,18 +70,18 @@ Real-time logs showing ML decisions:
 [t=2] Throttling bandwidth to 18 pkts/s (Risk: 79%)
 [t=3] Throttling bandwidth to 16 pkts/s (Risk: 87%)
 
-👉 Makes system decisions transparent and explainable
+👉 Provides transparency into system decisions
 
 💾 Replay System
 Export simulation data (JSON)
 Reload and replay runs in UI
 🧠 ML Integration
-Features Used:
+🔹 Features Used
 incoming_rate
 queue_length
 sent_packets
 dropped_packets
-Output:
+🔹 Output Logic
 
 Instead of binary classification:
 
@@ -77,12 +91,12 @@ Low risk → increase rate (rate + 1)
 👉 Forms a closed-loop feedback controller
 
 ⚙️ Tech Stack
-Backend
+🔹 Backend
 FastAPI
 WebSockets
 Scikit-learn
 Pandas
-Frontend
+🔹 Frontend
 React + Vite
 Tailwind CSS
 Recharts
@@ -118,12 +132,12 @@ Under high-load simulation:
 📈 ~15–20% improvement in throughput
 📊 Stable queue vs uncontrolled overflow (static model)
 🧠 Engineering Highlights
-Real-time systems (WebSockets)
-ML-based decision control
-Full-stack architecture
-Concurrent simulation design
-Explainable AI (logs + decisions)
-System-level thinking
+⚡ Real-time systems (WebSockets)
+🧠 ML-based decision control
+🌐 Full-stack architecture
+🔄 Concurrent simulation design
+🖥️ Explainable AI (logs + decisions)
+🧩 System-level thinking
 🚀 Deployment
 Frontend → Vercel
 Backend → Render / Railway
@@ -132,10 +146,9 @@ Backend → Render / Railway
 Bhumika Kumari
 B.Tech — Computer Science & Engineering
 
-Focus:
-
+🔹 Focus Areas
 Machine Learning
-Core CS
+Core Computer Science
 Systems Engineering
 ⭐ Final Note
 
