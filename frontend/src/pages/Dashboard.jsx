@@ -3,22 +3,31 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Activity, ArrowDownToLine, Zap } from 'lucide-react';
 
 export default function Dashboard() {
-  const [metrics, setMetrics] = useState({ cpu: '0.0', memory: '0.0', active: 0, bytesRate: '0.00', status: "ALLOW" });
+  const [metrics, setMetrics] = useState({ cpu: '0.0', memory: '0.0', active: 0, bytesRate: '0.00', status: "CONNECTING..." });
   const [data, setData] = useState([]);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     // Dynamically connect to the WebSocket running the Live Poller Loop
     const wsUrl = import.meta.env.VITE_API_URL 
-        ? import.meta.env.VITE_API_URL.replace('http', 'ws').replace('/api/v1', '') + '/ws/ui-client'
+        ? import.meta.env.VITE_API_URL.replace(/^http/, 'ws').replace('/api/v1', '') + '/ws/ui-client'
         : 'ws://localhost:8000/ws/ui-client';
         
     const ws = new WebSocket(wsUrl);
     
+    ws.onopen = () => setErrorMsg('');
+    ws.onerror = () => {
+        setErrorMsg(`Warning: Failed to establish WebSocket to ${wsUrl}`);
+        setMetrics(prev => ({ ...prev, status: "OFFLINE" }));
+    };
+    ws.onclose = () => setMetrics(prev => ({ ...prev, status: "OFFLINE" }));
+
     ws.onmessage = (event) => {
         const payload = JSON.parse(event.data);
         const m = payload.metrics;
         const d = payload.decision;
         
+        setErrorMsg('');
         setMetrics({
             cpu: (m.cpu_percent || 0).toFixed(1),
             memory: (m.memory_percent || 0).toFixed(1),
