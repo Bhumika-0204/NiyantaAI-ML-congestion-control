@@ -1,275 +1,64 @@
-# Niyanta AI — ML-Based Network Congestion Controller
+<div align="center">
 
-> A real-time, full-stack intelligent system that simulates network traffic, predicts congestion using machine learning, and dynamically adjusts packet flow through a closed-loop WebSocket architecture.
-> 
----
+# 🌐 Niyanta AI
+### Autonomous Traffic Intelligence & Control Platform
 
-## 📸 Dashboard Preview
-🔹 Live Monitoring Dashboard
+[![Live Demo](https://img.shields.io/badge/Live_Deployment-Responsive_Dashboard-success?style=for-the-badge&logo=vercel)](https://niyanta-ai-ml-congestion-control-three.vercel.app)
+[![Tech Stack](https://img.shields.io/badge/Stack-FastAPI%20%7C%20React%20%7C%20Python-blue?style=for-the-badge)]()
 
-(Add screenshot here)
+*A production-grade, application-layer traffic control gateway powered by Machine Learning and Agentic RAG.*
 
-🔹 Static vs Adaptive Comparison
-
-(Add screenshot here)
-
-🔹 ML Node Behavior
-
-(Add screenshot here)
-
-🔹 Terminal Diagnostics (Explainable AI)
-
-(Add screenshot here)
-
-🔹 ML Pipeline Architecture
-
-(Add screenshot here)
-
-## 📌 Overview
-
-  Traditional network systems rely on reactive congestion control, responding only after congestion occurs.
-
-  * Niyanta AI introduces a proactive approach:
-
-  * Uses machine learning to detect early congestion signals and dynamically adjust traffic before packet loss escalates.
-
-  * This project transforms a basic simulation into a real-time engineering system combining:
-
- ---
-  
-## 🧠 ML-driven decision making
- ⚡ WebSocket-based real-time streaming
- 
- 🌐 Full-stack architecture
- 
- 📊 Live system visualization
-
- ---
- 
-## 🚀 Key Features
-🔄 Dual Simulation Engine
-
-Runs Static vs ML-Adaptive models simultaneously
-Ensures identical input → fair comparison
-Clearly demonstrates performance improvements
-
-⚡ Real-Time WebSocket Streaming
-
-Eliminates REST polling
-Streams simulation ticks instantly
-Provides smooth, low-latency UI updates
-
-🧠 ML-Based Adaptive Control
-
-Logistic Regression + StandardScaler pipeline
-Uses predict_proba() with threshold (0.6)
-Converts predictions into control actions:
-⬇ Decrease rate → avoids congestion
-⬆ Increase rate → maximizes throughput
+</div>
 
 ---
 
-## 📊 Advanced Dashboard
+## 🚀 Live Production Links
+> **Note:** The old deployment URL was invalidated when the repository was transitioned. Please use the active production link below!
 
-
-Live charts:
-
-Throughput
-
-Queue Load
-
-Packet Drops
-
-
-Key metrics:
-
-📈 Throughput
-
-📉 Packet Loss %
-
-📊 Avg Queue Size
-
-
-Side-by-side comparison:
-
-Static vs Adaptive
+* **Live Interactive Dashboard:** [https://niyanta-ai-ml-congestion-control-three.vercel.app](https://niyanta-ai-ml-congestion-control-three.vercel.app)
+* **Backend API Host:** [https://niyantaai-ml-congestion-control-b758.onrender.com](https://niyantaai-ml-congestion-control-b758.onrender.com)
 
 ---
 
-## 🖥️ Terminal Diagnostics (Explainable AI)
+## 📖 System Overview
+Niyanta AI is a distributed, agentic artificial intelligence platform designed for infrastructure security and traffic intelligence. Unlike standard CRUD applications, Niyanta AI acts as an **intercepting API Gateway**. It actively monitors live hardware-level network telemetry (`psutil`), executes a Machine Learning prediction loop for congestion analysis, and automatically routes or rate-limits network requests before they saturate backend compute instances.
 
-Real-time logs showing ML decisions:
-
-[t=2] Throttling bandwidth to 18 pkts/s (Risk: 79%)
-
-[t=3] Throttling bandwidth to 16 pkts/s (Risk: 87%)
-
-👉 Provides transparency into system decisions
-
----
-
-## 💾 Replay System
-
-
-Export simulation data (JSON)
-Reload and replay runs in UI
-
-🧠 ML Integration
-
-🔹 Features Used
-
-incoming_rate
-
-queue_length
-
-sent_packets
-
-dropped_packets
-
-🔹 Output Logic
-
-Instead of binary classification:
-
-High risk → decrease rate (rate - 2)
-
-Low risk → increase rate (rate + 1)
-
-👉 Forms a closed-loop feedback controller
+### 🧠 Core Agentic Subsystems
+1. **Execution Agent & Gateway:** Implements a strict, thread-safe Token Bucket rate limiter to intercept active HTTP requests, verifying against a high-speed TTL decision cache.
+2. **Monitoring Agent:** Hooks directly to the host operating system's exact byte and packet pipelines to gather true hardware usage, rather than simulated data.
+3. **Prediction Engine (ML):** Evaluates live telemetry down to the millisecond using Logistic Regression to predict dynamic queue saturation.
+4. **Reasoning Agent (RAG + LLM):** If anomalous packets are detected, the system retrieves architectural networking rules from a local ChromaDB vector store and feeds them to an LLM to dynamically explain *why* the policy action was taken.
 
 ---
 
-
-## ⚙️ Tech Stack
-
-
-🔹 Backend
-
-FastAPI
-
-WebSockets
-
-Scikit-learn
-
-Pandas
-
-
-🔹 Frontend
-
-
-React + Vite
-
-Tailwind CSS
-
-
-Recharts
-
-
-🧬 System Architecture
-
-Simulation → ML Controller → Metrics → WebSocket → Frontend Dashboard
-
-Each user gets an isolated simulation session
-
-No shared state → no data conflicts
-
-
-Fully concurrent system
-
-▶️ Getting Started
-
-🔹 Phase 1: Setup ML
-
-.venv\Scripts\activate
-python simulator/data_collector.py
-
-python ml/train_model.py
-
-
-🔹 Phase 2: Start Backend
-
-
-.venv\Scripts\activate
-pip install -r backend/requirements.txt
-
-uvicorn backend.main:app --reload
-
-
-👉 Runs on: 
-
-
-🔹 Phase 3: Start Frontend
-
-
-cd frontend
-
-npm install
-
-npm run dev
-
-
-
-👉 Open: 
-
-
-
-## 📘 Documentation
-
-For detailed system design, architecture, and ML explanation:
-
-👉 **[View Full Documentation](./DOCUMENTATION.md)**
----
-
-## 📈 Results
-
-Under high-load simulation:
-
-📉 >30% reduction in packet loss
-
-📈 ~15–20% improvement in throughput
-
-📊 Stable queue vs uncontrolled overflow (static model)
-
-🧠 Engineering Highlights
-
-⚡ Real-time systems (WebSockets)
-
-🧠 ML-based decision control
-
-🌐 Full-stack architecture
-
-🔄 Concurrent simulation design
-
-🖥️ Explainable AI (logs + decisions)
+## 💻 Tech Stack
+* **Frontend:** React 18, Vite, TailwindCSS, Recharts, Lucide Icons
+* **Backend:** Python 3.11, FastAPI, Uvicorn (Asynchronous Event Loop)
+* **State Management:** In-memory LRU caching (Designed for Redis failover)
+* **AI/ML Layer:** Scikit-Learn (Logistic Regression), ChromaDB (Vector Search), OpenAI LLM
 
 ---
 
-## 🧩 System-level thinking
+## 🐳 Quickstart (Local Docker)
+Run the entire ML infrastructure natively on your local machine using Docker Compose.
 
+```bash
+# 1. Clone the repository
+git clone https://github.com/Bhumika-0204/NiyantaAI-ML-congestion-control.git
+cd NiyantaAI-ML-congestion-control
 
-🚀 Deployment
+# 2. Inject your LLM Key for the Reasoning Agent
+# Open .env.example, rename to .env, and add your OPENAI_API_KEY
 
-Frontend → Vercel
+# 3. Boot the environment
+docker-compose up --build
+```
+* **Frontend UI:** `http://localhost:5173`
+* **API Swagger Docs:** `http://localhost:8000/docs`
 
-Backend → Render / Railway
+---
 
+## 🛠️ Architecture Decisions & Scaling Limits
+While highly scalable, the current iteration of the Execution Agent uses server-local memory. For extreme horizontal scaling (>10,000 req/s), the state cache and Token Bucket rate limiter must be transitioned to a distributed `Redis` cluster utilizing embedded Lua scripts to secure the atomicity of token deductions. 
 
-👩‍💻 Author
-
-Bhumika Kumari
-
-B.Tech — Computer Science & Engineering
-
-
-
-🔹 Focus Areas
-
-* Machine Learning
-
-* Core Computer Science
-
-* Systems Engineering
-
-
-⭐ Final Note
-
-This project demonstrates how machine learning can move beyond prediction and become an active control system for real-time optimization.
+The Reasoning Agent runs highly asynchronously to ensure querying the massive LLM neural network does not block the primary eventloop traffic queue.
