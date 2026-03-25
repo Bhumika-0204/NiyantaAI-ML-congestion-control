@@ -1,46 +1,48 @@
 <div align="center">
 
 # 🌐 Niyanta AI
-### Autonomous Traffic Intelligence & Control Platform
+### Autonomous Traffic Intelligence & Agentic Control Platform
 
-[![Live Demo](https://img.shields.io/badge/Live_Deployment-Responsive_Dashboard-success?style=for-the-badge&logo=vercel)](https://niyanta-ai-ml-congestion-control-three.vercel.app)
-[![Tech Stack](https://img.shields.io/badge/Stack-FastAPI%20%7C%20React%20%7C%20Python-blue?style=for-the-badge)]()
+[![Live Demo](https://img.shields.io/badge/Live_Deployment-Available_Here-success?style=for-the-badge&logo=vercel)](https://niyanta-ai-ml-congestion-control-three.vercel.app)
+[![Python Version](https://img.shields.io/badge/Python-3.11+-blue.svg?style=for-the-badge&logo=python)]()
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)]()
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)]()
 
-*A production-grade, application-layer traffic control gateway powered by Machine Learning and Agentic RAG.*
-
+*An enterprise-grade, application-layer routing gateway powered by Machine Learning, Agentic architectures, and RAG.*
 </div>
 
 ---
 
-## 🚀 Live Production Links
-> **Note:** The old deployment URL was invalidated when the repository was transitioned. Please use the active production link below!
+## ⚡ Overview
+**Niyanta AI** is a production-ready, highly decoupled autonomous network intelligence system. It acts as an **intercepting API Gateway** that monitors literal hardware network interfaces to dynamically block, throttle, or allow traffic based on predictive Machine Learning models.
 
-* **Live Interactive Dashboard:** [https://niyanta-ai-ml-congestion-control-three.vercel.app](https://niyanta-ai-ml-congestion-control-three.vercel.app)
-* **Backend API Host:** [https://niyantaai-ml-congestion-control-b758.onrender.com](https://niyantaai-ml-congestion-control-b758.onrender.com)
+Instead of hardcoded rules, Niyanta AI leverages multiple asynchronous **Agents**:
+* **Monitoring Agent:** Subscribes to OS-level `psutil` network interfaces to calculate live incoming bandwidth and packet dropout latency.
+* **Prediction Agent:** Utilizes Logistic Regression to evaluate microsecond telemetry and predict queuing saturation *before* it crashes the backend.
+* **Policy & Execution Agents:** Runs a thread-safe strict Token Bucket ratelimiter connected to a high-speed TTL decision cache.
+* **Reasoning Agent (RAG + LLM):** Connects to a robust local `ChromaDB` vector store to retrieve networking logic documents. Feeds context to an OpenAI LLM to generate **human-readable diagnostic explanations** for why a specific packet route was blocked or throttled.
 
 ---
 
-## 📖 System Overview
-Niyanta AI is a distributed, agentic artificial intelligence platform designed for infrastructure security and traffic intelligence. Unlike standard CRUD applications, Niyanta AI acts as an **intercepting API Gateway**. It actively monitors live hardware-level network telemetry (`psutil`), executes a Machine Learning prediction loop for congestion analysis, and automatically routes or rate-limits network requests before they saturate backend compute instances.
+## 🔗 Live Production Links
+The system is actively deployed under a distributed microservice architecture across Render and Vercel.
 
-### 🧠 Core Agentic Subsystems
-1. **Execution Agent & Gateway:** Implements a strict, thread-safe Token Bucket rate limiter to intercept active HTTP requests, verifying against a high-speed TTL decision cache.
-2. **Monitoring Agent:** Hooks directly to the host operating system's exact byte and packet pipelines to gather true hardware usage, rather than simulated data.
-3. **Prediction Engine (ML):** Evaluates live telemetry down to the millisecond using Logistic Regression to predict dynamic queue saturation.
-4. **Reasoning Agent (RAG + LLM):** If anomalous packets are detected, the system retrieves architectural networking rules from a local ChromaDB vector store and feeds them to an LLM to dynamically explain *why* the policy action was taken.
+* **Live Interactive Dashboard:** [Niyanta AI Mission Control](https://niyanta-ai-ml-congestion-control-three.vercel.app)
+* **Backend API Host:** [Niyanta API Gateway (Render)](https://niyantaai-ml-congestion-control-b758.onrender.com)
+* **Interactive API Swagger Docs:** [API Documentation](https://niyantaai-ml-congestion-control-b758.onrender.com/docs)
 
 ---
 
 ## 💻 Tech Stack
-* **Frontend:** React 18, Vite, TailwindCSS, Recharts, Lucide Icons
-* **Backend:** Python 3.11, FastAPI, Uvicorn (Asynchronous Event Loop)
-* **State Management:** In-memory LRU caching (Designed for Redis failover)
-* **AI/ML Layer:** Scikit-Learn (Logistic Regression), ChromaDB (Vector Search), OpenAI LLM
+* **Frontend:** React 18, Vite, TailwindCSS, Recharts, Lucide Icons, WebSockets
+* **Backend:** Python 3.11, FastAPI, Uvicorn, Asynchronous Event Loops
+* **AI/ML Layer:** Scikit-Learn (Logistic Regression), ChromaDB (Vector Search), OpenAI API
+* **State Management:** Thread-safe Token Bucket implementations, LRU TTL execution cache
 
 ---
 
-## 🐳 Quickstart (Local Docker)
-Run the entire ML infrastructure natively on your local machine using Docker Compose.
+## 🚀 Quickstart (Local Infrastructure)
+You can boot the entire analytical environment locally using Docker Compose.
 
 ```bash
 # 1. Clone the repository
@@ -48,17 +50,16 @@ git clone https://github.com/Bhumika-0204/NiyantaAI-ML-congestion-control.git
 cd NiyantaAI-ML-congestion-control
 
 # 2. Inject your LLM Key for the Reasoning Agent
-# Open .env.example, rename to .env, and add your OPENAI_API_KEY
+cp .env.example .env
+# Edit .env and add your OPENAI_API_KEY
 
-# 3. Boot the environment
+# 3. Boot the Docker containers
 docker-compose up --build
 ```
-* **Frontend UI:** `http://localhost:5173`
-* **API Swagger Docs:** `http://localhost:8000/docs`
+> The React UI will be available at `http://localhost:5173`.
+> The API Gateway will be listening at `http://localhost:8000`.
 
 ---
 
-## 🛠️ Architecture Decisions & Scaling Limits
-While highly scalable, the current iteration of the Execution Agent uses server-local memory. For extreme horizontal scaling (>10,000 req/s), the state cache and Token Bucket rate limiter must be transitioned to a distributed `Redis` cluster utilizing embedded Lua scripts to secure the atomicity of token deductions. 
-
-The Reasoning Agent runs highly asynchronously to ensure querying the massive LLM neural network does not block the primary eventloop traffic queue.
+## 📚 Deep Dive Documentation
+For advanced details on how the Agentic event loop and RAG integrations actually work, please refer to the [ARCHITECTURE.md](ARCHITECTURE.md).
