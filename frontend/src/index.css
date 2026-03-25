@@ -1,28 +1,25 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary-500: #8b5cf6;
-  --color-primary-600: #7c3aed;
-  --color-bg-dark: #0f111a;
-  --color-panel-dark: #1e212b;
+:root {
+  --background: #030712;
+  --foreground: #f9fafb;
 }
 
-@layer base {
-  body {
-    background-color: var(--color-bg-dark);
-    color: #f3f4f6;
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
-/* Custom scrollbar for logging panel */
+/* Custom Scrollbar for dark theme */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #1e212b; 
+  background: #111827; 
 }
 ::-webkit-scrollbar-thumb {
   background: #374151; 
