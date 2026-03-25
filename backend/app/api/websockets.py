@@ -2,6 +2,10 @@ import asyncio
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import Dict
 
+from app.agents.monitoring_agent import monitor
+from app.agents.policy_agent import policy_agent
+from app.core.logger import logger
+
 ws_router = APIRouter()
 
 class ConnectionManager:
@@ -11,10 +15,12 @@ class ConnectionManager:
     async def connect(self, client_id: str, websocket: WebSocket):
         await websocket.accept()
         self.active_connections[client_id] = websocket
+        logger.info(f"WebSocket client {client_id} connected.")
 
     def disconnect(self, client_id: str):
         if client_id in self.active_connections:
             del self.active_connections[client_id]
+            logger.info(f"WebSocket client {client_id} disconnected.")
 
     async def broadcast(self, message: dict):
         for connection in self.active_connections.values():
@@ -25,15 +31,31 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
-@ws_router.websocket("/stream/{client_id}")
+async def live_device_monitoring_task():
+    """
+    Background worker that continuously pools the host's actual network traffic,
+    evaluates it using the ML Policy Agent, and streams it to the dashboard.
+    """
+    while True:
+        if manager.active_connections: # Only consume CPU to calculate/push if someone is watching
+            metrics = monitor.collect_live_device_metrics()
+            
+            # Evaluate using the predictive decision engine
+            decision = policy_agent.evaluate_request("HOST_DEVICE", metrics)
+            
+            payload = {
+                "metrics": metrics,
+                "decision": decision
+            }
+            await manager.broadcast(payload)
+            
+        await asyncio.sleep(1.0) # Refresh rate
+
+@ws_router.websocket("/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await manager.connect(client_id, websocket)
     try:
         while True:
-            # For simplicity, we just echo or ignore.
-            # Real-time metrics will be pushed by a background task using manager.broadcast()
-            data = await websocket.receive_text()
-            if data == "ping":
-                await websocket.send_text("pong")
+            await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect(client_id)

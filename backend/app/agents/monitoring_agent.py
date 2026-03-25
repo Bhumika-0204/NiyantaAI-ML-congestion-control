@@ -1,16 +1,21 @@
 import psutil
 import time
-from collections import deque
+from typing import Dict, Any
 
 class MonitoringAgent:
+    """
+    Tracks ACTUAL live host OS device metrics to feed into the prediction engine.
+    This effectively turns Niyanta AI into a real-time device traffic monitor.
+    """
     def __init__(self):
-        self.request_timestamps = deque(maxlen=1000)
+        self.last_net_io = psutil.net_io_counters()
+        self.last_time = time.time()
+        
+        # Standard tracking for API Gateway
         self.active_requests = 0
         self.total_requests = 0
         
     def log_request(self):
-        now = time.time()
-        self.request_timestamps.append(now)
         self.active_requests += 1
         self.total_requests += 1
         
@@ -18,20 +23,44 @@ class MonitoringAgent:
         if self.active_requests > 0:
             self.active_requests -= 1
             
-    def get_system_metrics(self):
-        now = time.time()
-        # Clean up old timestamps (older than 1 sec to calculate incoming rate per sec)
-        while self.request_timestamps and self.request_timestamps[0] < now - 1.0:
-            self.request_timestamps.popleft()
-            
-        rate = len(self.request_timestamps)
+    def collect_live_device_metrics(self) -> Dict[str, Any]:
+        """
+        Polls the OS for exact network usage differences over the last interval.
+        Maps real hardware data to the predictive ML feature format.
+        """
+        current_time = time.time()
+        current_net_io = psutil.net_io_counters()
         
-        return {
-            "cpu_percent": psutil.cpu_percent(interval=None),
+        time_diff = current_time - self.last_time
+        if time_diff == 0:
+            time_diff = 1.0
+            
+        # Calculate rates (per second) over the interval
+        packets_recv_rate = (current_net_io.packets_recv - self.last_net_io.packets_recv) / time_diff
+        bytes_recv_rate = (current_net_io.bytes_recv - self.last_net_io.bytes_recv) / time_diff
+        
+        # Hardware errors and drops
+        drops = (current_net_io.dropin - self.last_net_io.dropin) + (current_net_io.dropout - self.last_net_io.dropout)
+        errors = (current_net_io.errin - self.last_net_io.errin) + (current_net_io.errout - self.last_net_io.errout)
+        cpu_load = psutil.cpu_percent()
+        
+        # ML Structure Mapping
+        metrics = {
+            "incoming_rate": float(packets_recv_rate),
+            "queue_length": float(min(100.0, packets_recv_rate * 0.05)), # Hardware queue heuristic
+            "latency": float(10.0 + (cpu_load * 2.5)), # Latency heuristic based on CPU thread exhaustion
+            "error_rate": float(errors),
+            "dropped_packets": float(drops),
+            "cpu_percent": cpu_load,
             "memory_percent": psutil.virtual_memory().percent,
-            "incoming_rate": rate,
-            "active_requests": self.active_requests,
-            "total_requests": self.total_requests
+            "bytes_recv_rate": bytes_recv_rate,
+            "active_api_requests": self.active_requests
         }
+        
+        # Advance tracking timeframe
+        self.last_time = current_time
+        self.last_net_io = current_net_io
+        
+        return metrics
 
 monitor = MonitoringAgent()
