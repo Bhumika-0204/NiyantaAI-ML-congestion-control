@@ -4,15 +4,28 @@ import { TerminalSquare, Play } from 'lucide-react';
 export default function ApiPlayground() {
   const [response, setResponse] = useState('');
   
-  const handleTest = () => {
-    setResponse('Loading...');
-    setTimeout(() => {
-        setResponse(JSON.stringify({
-            "risk_score": 0.88,
-            "anomaly": false,
-            "action": "throttle"
-        }, null, 2));
-    }, 800);
+  const handleTest = async () => {
+    setResponse('Loading network route logic...');
+    try {
+        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+        const res = await fetch(`${baseUrl}/analyze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                metrics: {
+                    incoming_rate: 1500,
+                    latency: 250,
+                    error_rate: 0.05,
+                    queue_length: 85,
+                    dropped_packets: 12
+                }
+            })
+        });
+        const data = await res.json();
+        setResponse(JSON.stringify(data, null, 2));
+    } catch (err) {
+        setResponse(`Connection Error: ${err.message}\n\nPlease check that your VITE_API_URL environment variable is set to your Render URL starting with https://`);
+    }
   };
 
   return (
