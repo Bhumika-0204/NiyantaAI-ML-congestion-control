@@ -38,6 +38,7 @@ app.include_router(api_router, prefix="/api/v1")
 app.include_router(ws_router, prefix="/ws")
 
 @app.get("/")
+@app.head("/")
 def root():
     return {"message": "Welcome to Niyanta AI API Gateway"}
 
