@@ -4,7 +4,8 @@ import AiInsights from './pages/AiInsights';
 import Security from './pages/Security';
 import Analytics from './pages/Analytics';
 import ApiPlayground from './pages/ApiPlayground';
-import { LayoutDashboard, BrainCircuit, ShieldAlert, BarChart3, TerminalSquare } from 'lucide-react';
+import Policies from './pages/Policies';
+import { LayoutDashboard, BrainCircuit, ShieldAlert, BarChart3, TerminalSquare, Sliders } from 'lucide-react';
 
 function NavLink({ to, icon: Icon, children }) {
   const location = useLocation();
@@ -36,6 +37,7 @@ function App() {
             <NavLink to="/" icon={LayoutDashboard}>Dashboard</NavLink>
             <NavLink to="/ai-insights" icon={BrainCircuit}>AI Insights</NavLink>
             <NavLink to="/security" icon={ShieldAlert}>Security</NavLink>
+            <NavLink to="/policies" icon={Sliders}>Policies</NavLink>
             <NavLink to="/analytics" icon={BarChart3}>Analytics</NavLink>
             <NavLink to="/api-playground" icon={TerminalSquare}>API Playground</NavLink>
           </div>
@@ -47,6 +49,7 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/ai-insights" element={<AiInsights />} />
             <Route path="/security" element={<Security />} />
+            <Route path="/policies" element={<Policies />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/api-playground" element={<ApiPlayground />} />
           </Routes>
