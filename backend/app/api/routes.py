@@ -4,6 +4,7 @@ from typing import Dict, Any
 
 from app.agents.policy_agent import policy_agent
 from app.agents.reasoning_agent import reasoning_agent
+from app.agents.execution_agent import execution_agent
 from app.services.rag_service import rag_service
 from app.ml.ppo_agent import ppo_agent
 from app.services.distributed_limiter import limiter
@@ -92,6 +93,11 @@ async def health_check():
             "ml_engine_cache": "OK"
         }
     }
+
+@api_router.get("/security-events")
+async def get_security_events():
+    """Returns live security event data for the dashboard."""
+    return execution_agent.get_security_summary()
 
 @api_router.post("/explain")
 def explain_decision(payload: ExplainInput):

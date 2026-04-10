@@ -1,5 +1,6 @@
 import time
-from typing import Dict, Any
+from typing import Dict, Any, List
+from collections import deque
 from app.core.logger import logger
 
 class ExecutionAgent:
@@ -12,17 +13,34 @@ class ExecutionAgent:
         # Format: IP -> { "action": "throttle|block", "expires_at": float }
         self.decision_cache: Dict[str, Dict[str, Any]] = {}
         self.blocklist = set()
+        # Live security event log (last 100 events) for the dashboard
+        self.security_events: deque = deque(maxlen=100)
+        # Counters
+        self.total_blocked = 0
+        self.total_throttled = 0
+        self.total_allowed = 0
         
-    def commit_decision(self, ip: str, action: str, ttl_seconds: int = 60):
+    def commit_decision(self, ip: str, action: str, ttl_seconds: int = 60, reason: str = ""):
+        event = {
+            "ip": ip,
+            "action": action,
+            "reason": reason or ("Anomaly detected" if action == "block" else "ML risk > threshold"),
+            "timestamp": time.time(),
+        }
+        
         if action == "block":
             self.blocklist.add(ip)
+            self.total_blocked += 1
             logger.warning(f"ExecutionAgent: IP {ip} permanently added to blocklist.")
         else:
             self.decision_cache[ip] = {
                 "action": action,
                 "expires_at": time.time() + ttl_seconds
             }
+            self.total_throttled += 1
             logger.info(f"ExecutionAgent: Cached action '{action}' for IP {ip} (TTL: {ttl_seconds}s)")
+        
+        self.security_events.appendleft(event)
             
     def get_action(self, ip: str) -> str:
         if ip in self.blocklist:
@@ -34,7 +52,45 @@ class ExecutionAgent:
                 return record["action"]
             else:
                 del self.decision_cache[ip]
-                
+        
+        self.total_allowed += 1
         return "allow"
+
+    def get_security_summary(self) -> dict:
+        """Returns live security data for the frontend dashboard."""
+        now = time.time()
+        # Count blocks in the last hour
+        recent_blocks = sum(
+            1 for e in self.security_events
+            if e["action"] == "block" and (now - e["timestamp"]) < 3600
+        )
+        total_decisions = max(self.total_allowed + self.total_blocked + self.total_throttled, 1)
+        integrity = round(((total_decisions - self.total_blocked) / total_decisions) * 100, 1)
+        
+        # Format events for frontend
+        events = []
+        for e in list(self.security_events)[:20]:
+            age_sec = now - e["timestamp"]
+            if age_sec < 60:
+                time_ago = f"{int(age_sec)}s ago"
+            elif age_sec < 3600:
+                time_ago = f"{int(age_sec // 60)} min ago"
+            else:
+                time_ago = f"{int(age_sec // 3600)}h ago"
+            
+            events.append({
+                "ip": e["ip"],
+                "reason": e["reason"],
+                "timestamp": time_ago,
+                "status": e["action"].upper(),
+            })
+        
+        return {
+            "blocked_last_hour": recent_blocks,
+            "integrity_pct": integrity,
+            "active_blocklist_size": len(self.blocklist),
+            "active_throttle_count": len(self.decision_cache),
+            "events": events,
+        }
 
 execution_agent = ExecutionAgent()
