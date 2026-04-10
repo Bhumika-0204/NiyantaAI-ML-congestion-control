@@ -5,6 +5,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import asyncio
+import signal
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +14,9 @@ from app.core.config import settings
 from app.api.routes import api_router
 from app.api.websockets import ws_router, live_device_monitoring_task
 from app.middleware.gateway import TrafficGatewayMiddleware
+from app.middleware.network_protection import NetworkProtectionMiddleware, trigger_connection_draining
 from app.services.kafka_consumer import kafka_anomaly_consumer
+from app.services.ecmp_router import ecmp_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,7 +24,15 @@ async def lifespan(app: FastAPI):
     monitoring_task = asyncio.create_task(live_device_monitoring_task())
     # 2. Spin up the Kafka anomaly detection consumer loop (DDoS pipeline)
     kafka_task = asyncio.create_task(kafka_anomaly_consumer.start())
+    # 3. Register SIGTERM handler for graceful connection draining
+    loop = asyncio.get_event_loop()
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        try:
+            loop.add_signal_handler(sig, trigger_connection_draining)
+        except NotImplementedError:
+            pass  # Windows doesn't support add_signal_handler
     yield
+    trigger_connection_draining()
     monitoring_task.cancel()
     kafka_task.cancel()
 
@@ -35,7 +46,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Attach API Gateway Interceptor
+# Attach Network Protection Layer (outermost — fires first on every request)
+app.add_middleware(NetworkProtectionMiddleware)
+
+# Attach API Gateway Interceptor (ML policy engine)
 app.add_middleware(TrafficGatewayMiddleware)
 
 app.include_router(api_router, prefix="/api/v1")
@@ -50,6 +64,11 @@ def root():
 def get_metrics():
     from app.agents.monitoring_agent import monitor
     return monitor.live_metrics
+
+@app.get("/ecmp-status")
+def ecmp_status():
+    """Returns ECMP backend health status for operational dashboards."""
+    return {"backends": ecmp_router.get_status()}
 
 if __name__ == "__main__":
     import uvicorn

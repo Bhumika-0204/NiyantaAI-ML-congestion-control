@@ -1,0 +1,60 @@
+# Node Hardening DaemonSet — SYN Cookies, ECN, BCP38 Kernel, Buffer Tuning
+# Runs on EVERY Kubernetes node automatically
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: niyanta-node-hardening
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: niyanta-node-hardening
+  template:
+    metadata:
+      labels:
+        app: niyanta-node-hardening
+    spec:
+      hostPID: true
+      hostNetwork: true
+      tolerations:
+      - operator: Exists
+      initContainers:
+      - name: kernel-hardening
+        image: busybox:latest
+        securityContext:
+          privileged: true
+        command:
+          - /bin/sh
+          - -c
+          - |
+            # TCP SYN Cookie Protection — no state until handshake completes
+            sysctl -w net.ipv4.tcp_syncookies=1
+
+            # ECN — mark packets instead of dropping (preserves throughput)
+            sysctl -w net.ipv4.tcp_ecn=1
+
+            # Socket backlog — default 128 too small for 10K+ req/s
+            sysctl -w net.core.somaxconn=65535
+            sysctl -w net.ipv4.tcp_max_syn_backlog=65535
+
+            # TIME_WAIT reuse — critical for short-lived HTTP connections
+            sysctl -w net.ipv4.tcp_tw_reuse=1
+
+            # BCP38 kernel enforcement — drop spoofed source IPs
+            sysctl -w net.ipv4.conf.all.rp_filter=1
+            sysctl -w net.ipv4.conf.default.rp_filter=1
+
+            # Network buffer tuning — 128MB for burst absorption
+            sysctl -w net.core.rmem_max=134217728
+            sysctl -w net.core.wmem_max=134217728
+            sysctl -w net.ipv4.tcp_rmem="4096 87380 134217728"
+            sysctl -w net.ipv4.tcp_wmem="4096 65536 134217728"
+
+            echo "[NodeHardening] All kernel parameters applied."
+      containers:
+      - name: pause
+        image: gcr.io/google_containers/pause:3.1
+        resources:
+          limits:
+            cpu: "10m"
+            memory: "10Mi"

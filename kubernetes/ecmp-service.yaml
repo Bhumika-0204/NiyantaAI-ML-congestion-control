@@ -1,0 +1,78 @@
+# ECMP Gateway Service + Anycast + Topology Spread
+apiVersion: v1
+kind: Service
+metadata:
+  name: niyanta-gateway-ecmp-svc
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "30"
+spec:
+  type: LoadBalancer
+  selector:
+    app: niyanta-gateway
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+  - name: https
+    port: 443
+    targetPort: 8000
+  sessionAffinity: None
+---
+# ECMP Topology Spread — pods spread evenly across AZs and nodes
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: niyanta-gateway-ecmp
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: niyanta-gateway
+  template:
+    metadata:
+      labels:
+        app: niyanta-gateway
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: niyanta-gateway
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: niyanta-gateway
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: niyanta-gateway
+        image: ghcr.io/bhumika-0204/niyanta-gateway:latest
+        ports:
+        - containerPort: 8000
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 15"]
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          failureThreshold: 1
+---
+# Anycast ConfigMap — single VIP advertised from all regions via BGP
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: niyanta-anycast-config
+data:
+  anycast_vip: "203.0.113.100"
+  regions: "us-east-1,eu-west-1,ap-southeast-1"
+  bgp_community: "65000:100"
+  health_check_path: "/health"
