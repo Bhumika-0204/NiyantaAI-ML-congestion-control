@@ -13,13 +13,17 @@ from app.core.config import settings
 from app.api.routes import api_router
 from app.api.websockets import ws_router, live_device_monitoring_task
 from app.middleware.gateway import TrafficGatewayMiddleware
+from app.services.kafka_consumer import kafka_anomaly_consumer
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Spin up the background thread to poll the OS for network traffic
-    task = asyncio.create_task(live_device_monitoring_task())
+    # 1. Spin up the background thread to poll the OS for network traffic
+    monitoring_task = asyncio.create_task(live_device_monitoring_task())
+    # 2. Spin up the Kafka anomaly detection consumer loop (DDoS pipeline)
+    kafka_task = asyncio.create_task(kafka_anomaly_consumer.start())
     yield
-    task.cancel()
+    monitoring_task.cancel()
+    kafka_task.cancel()
 
 app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 

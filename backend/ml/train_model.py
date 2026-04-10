@@ -1,6 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
@@ -25,11 +25,10 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # -------------------- PREPROCESSING & MODEL --------------------
-# Using a Pipeline to scale features (LogReg is sensitive to scale)
-# class_weight="balanced" handles natural imbalance in congestion labels
+# Using a Pipeline to scale features, then Random Forest for better nonlinear pattern matching
 pipeline = Pipeline([
     ("scaler", StandardScaler()),
-    ("model", LogisticRegression(max_iter=200, class_weight="balanced", n_jobs=1))
+    ("model", RandomForestClassifier(n_estimators=100, max_depth=10, class_weight="balanced", random_state=42, n_jobs=-1))
 ])
 
 # -------------------- TRAIN --------------------

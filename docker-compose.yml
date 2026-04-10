@@ -9,9 +9,21 @@ services:
       - "8000:8000"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - REDIS_HOST=redis
     volumes:
       - ./backend/app:/app/app
       - ./ml:/app/ml
+    restart: unless-stopped
+    depends_on:
+      - redis
+    networks:
+      - niyanta_net
+
+  redis:
+    image: redis:alpine
+    container_name: niyanta_redis
+    ports:
+      - "6379:6379"
     restart: unless-stopped
     networks:
       - niyanta_net
