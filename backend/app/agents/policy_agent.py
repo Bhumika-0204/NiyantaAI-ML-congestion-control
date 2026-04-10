@@ -33,19 +33,24 @@ class PolicyAgent:
         
         # 4. Strict Deterministic Policy Logic
         action = "allow"
+        reason = ""
         if is_anomaly:
             action = "block"
+            reason = f"Anomaly detected (rate={incoming_rate}, err={error_rate:.2f})"
         elif risk_score > self.risk_threshold:
             action = "throttle"
+            reason = f"High risk ML prediction (score={risk_score:.2f})"
             
         # 5. Commit to execution layer cache
         if action != "allow":
-            execution_agent.commit_decision(ip, action, ttl_seconds=60)
+            execution_agent.commit_decision(ip, action, ttl_seconds=60, reason=reason)
             logger.info(f"PolicyAgent: Decision '{action}' logged for IP {ip}. ML Risk: {risk_score:.2f}")
+        else:
+            execution_agent.total_allowed += 1
             
         return {
             "risk_score": float(risk_score),
-            "anomaly": is_anomaly,
+            "anomaly_detected": is_anomaly,
             "action": action
         }
 

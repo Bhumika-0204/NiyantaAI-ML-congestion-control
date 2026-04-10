@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, HTTPException
 from pydantic import BaseModel
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 from app.agents.policy_agent import policy_agent
 from app.agents.reasoning_agent import reasoning_agent
@@ -33,6 +33,20 @@ class EnterpriseAnalyzeInput(BaseModel):
         "latency_ms": 12.0, 
         "packet_loss": 0.05, 
         "request_rate": 8000
+    }
+
+@api_router.post("/analyze")
+async def analyze_traffic(payload: MetricsInput, request: Request):
+    """
+    General traffic analysis endpoint. Runs the full ML pipeline:
+    anomaly detection → risk prediction → policy decision.
+    Used by the attack simulator and API Playground.
+    """
+    ip = request.headers.get("X-Forwarded-For", payload.ip)
+    decision = policy_agent.evaluate_request(ip, payload.metrics)
+    return {
+        "ip": ip,
+        "decision": decision,
     }
 
 @api_router.post("/analyze-request")
@@ -131,3 +145,52 @@ def query_knowledge(payload: QueryInput):
     except Exception as e:
         logger.error(f"Error in /query: {e}")
         raise HTTPException(status_code=500, detail="RAG retrieval failed")
+
+# ─── Policy Configuration Storage ───────────────────────────────
+# In production this would be in Redis/Consul. For now, in-memory.
+_policy_config = {
+    "acl": {
+        "blockAllAttacks": True,
+        "blockUnauthorized": True,
+        "filterArp": False,
+        "trafficPortBased": True,
+        "trafficDNS": True,
+        "trafficDHCP": False,
+    },
+    "macBindings": [],
+    "rateLimit": {
+        "packetRate": 5000,
+        "cpuThreshold": 85,
+        "reducePayload": True,
+    },
+    "security": {
+        "portSecurityEnabled": True,
+        "vpnAccessEnabled": False,
+    }
+}
+
+@api_router.get("/policies")
+async def get_policies():
+    """Returns current policy configuration."""
+    return _policy_config
+
+class PolicyUpdate(BaseModel):
+    acl: Dict[str, Any] = {}
+    macBindings: List[Dict[str, str]] = []
+    rateLimit: Dict[str, Any] = {}
+    security: Dict[str, Any] = {}
+
+@api_router.put("/policies")
+async def update_policies(payload: PolicyUpdate):
+    """Saves updated policy configuration."""
+    global _policy_config
+    if payload.acl:
+        _policy_config["acl"] = payload.acl
+    if payload.macBindings is not None:
+        _policy_config["macBindings"] = payload.macBindings
+    if payload.rateLimit:
+        _policy_config["rateLimit"] = payload.rateLimit
+    if payload.security:
+        _policy_config["security"] = payload.security
+    logger.info(f"Policies updated: {_policy_config}")
+    return {"status": "saved", "config": _policy_config}
