@@ -99,6 +99,11 @@ async def get_security_events():
     """Returns live security event data for the dashboard."""
     return execution_agent.get_security_summary()
 
+@api_router.get("/analytics")
+async def get_analytics():
+    """Returns live cumulative traffic decision counts."""
+    return execution_agent.get_analytics()
+
 @api_router.post("/explain")
 def explain_decision(payload: ExplainInput):
     """

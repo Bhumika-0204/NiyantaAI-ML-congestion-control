@@ -93,4 +93,12 @@ class ExecutionAgent:
             "events": events,
         }
 
+    def get_analytics(self) -> dict:
+        """Returns live cumulative analytics for the Traffic Analytics chart."""
+        return {
+            "total_allowed": self.total_allowed,
+            "total_throttled": self.total_throttled,
+            "total_blocked": self.total_blocked,
+        }
+
 execution_agent = ExecutionAgent()
