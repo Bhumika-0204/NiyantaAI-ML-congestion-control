@@ -10,9 +10,9 @@ class PredictionAgent:
                 self.model = loaded_data["model"]
             else:
                 self.model = loaded_data
-            print("✅ PredictionAgent: ML Model loaded successfully.")
+            print("PredictionAgent: ML Model loaded successfully.")
         except Exception as e:
-            print(f"⚠️ PredictionAgent: Model not found at {settings.MODEL_PATH}. Using fallback heuristic logic. Error: {e}")
+            print(f"Warning: PredictionAgent: Model not found at {settings.MODEL_PATH}. Using fallback heuristic logic. Error: {e}")
             self.model = None
 
     def predict_congestion(self, incoming_rate: float, queue_length: float, latency: float, error_rate: float, dropped_packets: float) -> float:
