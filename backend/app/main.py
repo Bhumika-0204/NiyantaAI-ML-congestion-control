@@ -15,8 +15,16 @@ from app.api.routes import api_router
 from app.api.websockets import ws_router, live_device_monitoring_task
 from app.middleware.gateway import TrafficGatewayMiddleware
 from app.middleware.network_protection import NetworkProtectionMiddleware, trigger_connection_draining
+from app.middleware.zero_trust import ZeroTrustMiddleware
 from app.services.kafka_consumer import kafka_anomaly_consumer
 from app.services.ecmp_router import ecmp_router
+from app.plugins.manager import plugin_manager
+from app.plugins.impl.red_plugin import REDPlugin
+from app.plugins.impl.codel_plugin import CoDelPlugin
+
+# Register plugins
+plugin_manager.register("RED", REDPlugin())
+plugin_manager.register("CoDel", CoDelPlugin())
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -49,11 +57,20 @@ app.add_middleware(
 # Attach Network Protection Layer (outermost — fires first on every request)
 app.add_middleware(NetworkProtectionMiddleware)
 
+# Attach Zero Trust Auth
+app.add_middleware(ZeroTrustMiddleware)
+
 # Attach API Gateway Interceptor (ML policy engine)
 app.add_middleware(TrafficGatewayMiddleware)
 
 app.include_router(api_router, prefix="/api/v1")
 app.include_router(ws_router, prefix="/ws")
+
+from app.api.explainability import router as explain_router
+app.include_router(explain_router, prefix="/api/v2")
+
+from app.api.chaos import router as chaos_router
+app.include_router(chaos_router, prefix="/api/v1")
 
 @app.get("/")
 @app.head("/")

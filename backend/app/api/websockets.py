@@ -3,7 +3,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import Dict
 
 from app.agents.monitoring_agent import monitor
-from app.agents.policy_agent import policy_agent
+from app.agents.multi_agent_coordinator import coordinator
 from app.core.logger import logger
 
 ws_router = APIRouter()
@@ -41,11 +41,14 @@ async def live_device_monitoring_task():
             metrics = monitor.collect_live_device_metrics()
             
             # Evaluate using the predictive decision engine
-            decision = policy_agent.evaluate_request("HOST_DEVICE", metrics)
+            # decision = policy_agent.evaluate_request("HOST_DEVICE", metrics)
+            agent_decision = await coordinator.get_joint_action(metrics)
             
             payload = {
                 "metrics": metrics,
-                "decision": decision
+                "multi_agent_decision": agent_decision,
+                "anomaly_score": agent_decision.get("strictness", 0),
+                "active_connections": len(manager.active_connections)
             }
             await manager.broadcast(payload)
             

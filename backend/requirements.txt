@@ -1,5 +1,8 @@
 fastapi[all]
 uvicorn
+grpcio>=1.62.0
+grpcio-tools>=1.62.0
+PyJWT>=2.8.0
 pandas
 scikit-learn
 joblib

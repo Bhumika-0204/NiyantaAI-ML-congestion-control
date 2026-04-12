@@ -1,0 +1,4 @@
+type: ddos
+concurrency: 500
+duration: 60 # seconds
+description: High concurrency rapid HTTP GET flood
