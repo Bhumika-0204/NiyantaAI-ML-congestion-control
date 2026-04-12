@@ -9,8 +9,8 @@ from app.core.config import settings
 class ZeroTrustMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         # Allow open access to metrics, ecmp-status, websockets and root for health check
-        allowed_paths = ["/", "/metrics", "/ecmp-status", "/ws"]
-        if any(request.url.path.startswith(path) for path in allowed_paths):
+        allowed_paths = ["/", "/metrics", "/ecmp-status"]
+        if request.url.path in allowed_paths or request.url.path.startswith("/ws"):
             return await call_next(request)
 
         # 1. API Key / JWT Authentication
