@@ -2,9 +2,11 @@
 # that default to looking for `main.py` in the root folder.
 # It simply imports and exposes the actual application.
 
+import os
 from app.main import app
 
 if __name__ == "__main__":
     import uvicorn
-    # Make sure we bind to 0.0.0.0 so Render/Docker can expose it externally
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    # Important: Cloud providers like Render assign a dynamic port via the PORT env var
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
