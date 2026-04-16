@@ -29,7 +29,10 @@ app = FastAPI(title="ML Network Congestion Controller API")
 # Allow frontend to connect
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://niyanta-ai-ml-congestion-control-three.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
