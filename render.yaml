@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: niyanta-backend
+    runtime: docker
+    plan: free
+    rootDir: backend
+    envVars:
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: niyanta-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: niyanta-redis
+          property: port
+      - key: SECRET_KEY
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false
+
+  - type: redis
+    name: niyanta-redis
+    plan: free
+    ipAllowList: [] # Restrict access to internal services for security
