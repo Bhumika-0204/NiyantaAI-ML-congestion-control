@@ -13,7 +13,6 @@ export default function Policies() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // Load policies from backend on mount
   useEffect(() => {
     const loadPolicies = async () => {
       try {
@@ -32,7 +31,6 @@ export default function Policies() {
     loadPolicies();
   }, []);
 
-  // Save all policies to backend
   const savePolicies = async () => {
     setSaving(true);
     setSaved(false);
@@ -105,7 +103,7 @@ export default function Policies() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        {/* Section 1: ACL */}
+        {}
         <div className="space-y-6">
           <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg">
             <div className="bg-gradient-to-r from-red-500/10 to-transparent p-6 border-b border-gray-800">
@@ -211,7 +209,7 @@ export default function Policies() {
 
         <div className="space-y-6 lg:space-y-8">
           
-          {/* Section 2: Rate Limiting */}
+          {}
           <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg">
             <div className="bg-gradient-to-r from-orange-500/10 to-transparent p-6 border-b border-gray-800">
               <h3 className="text-xl font-bold flex items-center gap-2">
@@ -253,7 +251,7 @@ export default function Policies() {
             </div>
           </div>
 
-          {/* Section 3: Security Policies */}
+          {}
           <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-lg">
             <div className="bg-gradient-to-r from-purple-500/10 to-transparent p-6 border-b border-gray-800">
               <h3 className="text-xl font-bold flex items-center gap-2">

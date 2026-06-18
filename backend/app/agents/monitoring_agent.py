@@ -11,7 +11,7 @@ class MonitoringAgent:
         self.last_net_io = psutil.net_io_counters()
         self.last_time = time.time()
         
-        # Standard tracking for API Gateway
+        
         self.active_requests = 0
         self.total_requests = 0
         
@@ -35,20 +35,20 @@ class MonitoringAgent:
         if time_diff == 0:
             time_diff = 1.0
             
-        # Calculate rates (per second) over the interval
+        
         packets_recv_rate = (current_net_io.packets_recv - self.last_net_io.packets_recv) / time_diff
         bytes_recv_rate = (current_net_io.bytes_recv - self.last_net_io.bytes_recv) / time_diff
         
-        # Hardware errors and drops
+        
         drops = (current_net_io.dropin - self.last_net_io.dropin) + (current_net_io.dropout - self.last_net_io.dropout)
         errors = (current_net_io.errin - self.last_net_io.errin) + (current_net_io.errout - self.last_net_io.errout)
         cpu_load = psutil.cpu_percent()
         
-        # ML Structure Mapping
+        
         metrics = {
             "incoming_rate": float(packets_recv_rate),
-            "queue_length": float(min(100.0, packets_recv_rate * 0.05)), # Hardware queue heuristic
-            "latency": float(10.0 + (cpu_load * 2.5)), # Latency heuristic based on CPU thread exhaustion
+            "queue_length": float(min(100.0, packets_recv_rate * 0.05)), 
+            "latency": float(10.0 + (cpu_load * 2.5)), 
             "error_rate": float(errors),
             "dropped_packets": float(drops),
             "cpu_percent": cpu_load,
@@ -57,7 +57,7 @@ class MonitoringAgent:
             "active_api_requests": self.active_requests
         }
         
-        # Advance tracking timeframe
+        
         self.last_time = current_time
         self.last_net_io = current_net_io
         

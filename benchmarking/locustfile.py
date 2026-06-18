@@ -2,14 +2,14 @@ from locust import HttpUser, task, between, events
 import time
 import random
 
-# ==============================================================================
-# Niyanta AI vs Traditional NGINX Benchmarking Suite
-# Run: locust -f locustfile.py --host=http://localhost:8000
-# Target Metrics: Latency, Throughput, Failure Rates (429s/500s)
-# ==============================================================================
+
+
+
+
+
 
 class APIStressTester(HttpUser):
-    # Aggressively simulate traffic. Wait time between user requests is minimal.
+    
     wait_time = between(0.01, 0.1)
 
     def on_start(self):
@@ -35,7 +35,7 @@ class APIStressTester(HttpUser):
         ) as response:
             latency = (time.time() - start_time) * 1000
             
-            # 200 = Success, 429 = Correctly Throttled by Gateway AI
+            
             if response.status_code in [200, 429]:
                 response.success()
             else:
@@ -50,22 +50,22 @@ class APIStressTester(HttpUser):
         """
         malicious_headers = {
             "Authorization": "Bearer TEST_JWT_TOKEN_99999",
-            "X-Client-IP": "10.0.0.99" # Focused attack origin
+            "X-Client-IP": "10.0.0.99" 
         }
         
-        # Fire a quick salvo of requests perfectly sync'd to exceed token buckets
+        
         for _ in range(50):
             response = self.client.post(
                 "/analyze-request", 
                 headers=malicious_headers, 
                 json={"payload_size": 2048, "endpoint": "/api/data"}
             )
-            # The dashboard will hook these statistics allowing us to graph
-            # the exact millisecond the gateway tripped the Block policy.
+            
+            
 
-# ==============================================================================
-# Visualization hooks (e.g. pushing to CSV/Grafana metrics for Post-Analysis)
-# ==============================================================================
+
+
+
 @events.test_stop.add_listener
 def on_test_stop(environment, **kwargs):
     print("---------------------------------------------------------")

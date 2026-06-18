@@ -10,7 +10,7 @@ class CoDelPlugin(BaseProtectionPlugin):
         self.target_ms = target_ms
 
     async def process_request(self, request: Request, context: dict) -> Tuple[bool, Optional[Response]]:
-        # CoDel measures enqueue to dequeue delay. For HTTP, we start a timer.
+        
         context['codel_start_time'] = time.time()
         return True, None
 

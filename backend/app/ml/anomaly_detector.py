@@ -34,17 +34,17 @@ class AnomalyDetectionService:
         In production, this model is trained nightly on Kafka stream data 
         and its sklearn artifact is versioned in MLflow.
         """
-        # contamination = expected fraction of anomalies in traffic.
-        # 0.05 = we expect ~5% of traffic to be malicious/anomalous.
+        
+        
         self.model = IsolationForest(
             n_estimators=100,  
             contamination=0.05,
             random_state=42,
-            n_jobs=-1  # Use all available CPU cores at inference time
+            n_jobs=-1  
         )
         
-        # Warm-up: In production, we load from MLflow artifact registry.
-        # Here we seed with synthetic "normal" traffic for demonstration.
+        
+        
         self._warm_up_with_baseline_traffic()
         logger.info("IsolationForest Anomaly Detector initialized and warm-up complete.")
 
@@ -54,13 +54,13 @@ class AnomalyDetectionService:
         This is replaced in production with real historical Kafka data.
         """
         np.random.seed(42)
-        # Feature vector: [cpu%, latency_ms, packet_loss, request_rate, payload_bytes]
+        
         baseline_traffic = np.column_stack([
-            np.random.normal(45, 15, 5000),      # CPU 20-70% normal
-            np.random.normal(25, 10, 5000),       # Latency 15-35ms normal
-            np.random.normal(0.02, 0.01, 5000),   # Packet loss < 5% normal
-            np.random.normal(5000, 1500, 5000),   # 2000-8000 req/s normal range
-            np.random.normal(512, 200, 5000),     # Payload sizes 100-900 bytes normal
+            np.random.normal(45, 15, 5000),      
+            np.random.normal(25, 10, 5000),       
+            np.random.normal(0.02, 0.01, 5000),   
+            np.random.normal(5000, 1500, 5000),   
+            np.random.normal(512, 200, 5000),     
         ])
         self.model.fit(np.clip(baseline_traffic, 0, None))
 
@@ -84,10 +84,10 @@ class AnomalyDetectionService:
         """
         features = self.extract_features(telemetry)
         
-        # score_samples returns negative values: more negative = more anomalous.
-        # -0.5 and below is a strong anomaly indicator for FAANG-scale traffic.
+        
+        
         anomaly_score = self.model.score_samples(features)[0]
-        prediction = self.model.predict(features)[0]  # -1 = anomaly, 1 = normal
+        prediction = self.model.predict(features)[0]  
         
         is_anomaly = prediction == -1
         threat_level = "CRITICAL" if anomaly_score < -0.5 else ("HIGH" if is_anomaly else "NORMAL")
@@ -107,5 +107,5 @@ class AnomalyDetectionService:
         
         return result
 
-# Singleton for FastAPI / Kafka Consumer dependency injection
+
 anomaly_detector = AnomalyDetectionService()

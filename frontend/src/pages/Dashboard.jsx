@@ -8,7 +8,6 @@ export default function Dashboard() {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    // Dynamically connect to the WebSocket running the Live Poller Loop
     const wsUrl = import.meta.env.VITE_API_URL 
         ? import.meta.env.VITE_API_URL.replace(/^http/, 'ws').replace('/api/v1', '') + '/ws/ui-client'
         : 'ws://localhost:8000/ws/ui-client';
@@ -32,7 +31,7 @@ export default function Dashboard() {
             cpu: (m.cpu_percent || 0).toFixed(1),
             memory: (m.memory_percent || 0).toFixed(1),
             active: Math.floor(m.incoming_rate || 0),
-            bytesRate: ((m.bytes_recv_rate || 0) / 1024).toFixed(2), // Convert to KB/s
+            bytesRate: ((m.bytes_recv_rate || 0) / 1024).toFixed(2), 
             status: d.action.toUpperCase()
         });
         
@@ -42,7 +41,7 @@ export default function Dashboard() {
                 traffic: m.incoming_rate || 0
             };
             const newData = [...prev, newPoint];
-            if (newData.length > 20) newData.shift(); // Keep last 20 ticks
+            if (newData.length > 20) newData.shift(); 
             return newData;
         });
     };

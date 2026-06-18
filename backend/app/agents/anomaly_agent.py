@@ -15,13 +15,13 @@ class AnomalyAgent(BaseAgent):
         return False
 
     async def act(self, local_state: Dict[str, Any]) -> Any:
-        # Output: strictness threshold for Isolation Forest
+        
         error_rate = local_state.get("error_rate", 0.0)
         
-        # If error rate spikes, tighten the threshold
+        
         if error_rate > 0.1:
-            return 0.8 # Very strict
-        return 0.5 # Normal
+            return 0.8 
+        return 0.5 
 
     async def learn(self, experience: Dict[str, Any]):
         pass

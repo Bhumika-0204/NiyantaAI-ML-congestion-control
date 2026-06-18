@@ -57,10 +57,10 @@ async def analyze_enterprise_traffic(payload: EnterpriseAnalyzeInput, request: R
     2. Sub-millisecond RL (PPO) policy inference
     """
     try:
-        # Step 1: Distributed Token Bucket Check
+        
         allowed, remaining = await limiter.check_rate_limit(payload.client_ip)
         if not allowed:
-            # PPO Agent could theoretically analyze why we dropped it, but fast-fail is preferred
+            
             return {
                 "status": "error",
                 "action": "throttle",
@@ -68,7 +68,7 @@ async def analyze_enterprise_traffic(payload: EnterpriseAnalyzeInput, request: R
                 "rate_limit_remaining": remaining
             }
 
-        # Step 2: RL PPO Inference (sub-millisecond evaluation)
+        
         action = ppo_agent.take_action(payload.system_metrics)
         
         return {
@@ -146,8 +146,8 @@ def query_knowledge(payload: QueryInput):
         logger.error(f"Error in /query: {e}")
         raise HTTPException(status_code=500, detail="RAG retrieval failed")
 
-# ─── Policy Configuration Storage ───────────────────────────────
-# In production this would be in Redis/Consul. For now, in-memory.
+
+
 _policy_config = {
     "acl": {
         "blockAllAttacks": True,

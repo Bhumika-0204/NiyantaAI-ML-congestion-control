@@ -9,7 +9,7 @@
 
 Think of it as a **mini Cloudflare** with an ML brain.
 
-```
+```.0
 Client Request → [Niyanta AI Gateway] → Backend Server
                        ↓
               ML Engine decides:

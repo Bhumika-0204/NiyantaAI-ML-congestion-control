@@ -40,7 +40,7 @@ class LLMService:
         Rule-based reasoning engine that generates dynamic, context-aware
         explanations from the actual metrics — NOT a static mock string.
         """
-        # Parse metrics from the prompt
+        
         import re
         
         action = "unknown"
@@ -67,7 +67,7 @@ class LLMService:
 
         anomaly = "True" in prompt or "true" in prompt
 
-        # Generate dynamic explanation based on actual values
+        
         parts = []
         
         if action == "block":
@@ -88,7 +88,7 @@ class LLMService:
             if rate > 3000:
                 parts.append(f"Request rate of {rate:.0f}/s is approaching the Leaky Bucket drain cap of 50/s per IP. Token replenishment has been slowed to smooth upstream burst pressure.")
         
-        else:  # allow
+        else:  
             parts.append(f"All systems nominal — the traffic profile falls within safe operational bounds.")
             if cpu < 50:
                 parts.append(f"CPU at {cpu:.1f}% provides adequate headroom. No congestion signals detected by RED or CoDel algorithms.")
@@ -97,6 +97,6 @@ class LLMService:
         if not parts:
             parts.append(f"Action '{action}' was taken based on current system telemetry. The decision reflects the combined output of the PPO RL agent, Isolation Forest anomaly detector, and Token Bucket rate limiter working in concert.")
 
-        return " ".join(parts[:3])  # Cap at 3 sentences
+        return " ".join(parts[:3])  
 
 llm_service = LLMService()

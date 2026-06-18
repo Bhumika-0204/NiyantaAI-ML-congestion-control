@@ -12,7 +12,7 @@ class MultiAgentCoordinator:
     async def get_joint_action(self, request_features: dict) -> dict:
         local_state = request_features
         
-        # Async execution of all agents
+        
         c_action, r_action, a_action = await asyncio.gather(
             self.congestion_agent.act(local_state),
             self.routing_agent.act(local_state),

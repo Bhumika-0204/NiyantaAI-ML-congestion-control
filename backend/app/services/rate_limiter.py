@@ -40,7 +40,7 @@ class RateLimiterManager:
             
     def is_allowed(self, ip: str, throttle: bool = False) -> bool:
         bucket = self.get_bucket(ip)
-        # Throttled state demands a higher token cost per request, effectively shedding load
+        
         cost = 10 if throttle else 1
         return bucket.consume(cost)
 

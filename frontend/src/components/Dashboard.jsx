@@ -116,17 +116,16 @@ export default function Dashboard() {
     e.target.value = null; 
   };
 
-  // Extract latest point for dashboard visualization
   const latest = history.length > 0 ? history[history.length - 1] : null;
   const adaptiveLossPercent = latest ? (((latest.adaptive_dropped / Math.max(1, latest.adaptive_dropped + latest.adaptive_sent)) * 100) || 0).toFixed(1) : 0;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500 slide-in-from-bottom-4">
       
-      {/* Control Panel (Glassmorphic) & Metrics Row */}
+      {}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
         
-        {/* Execution Block */}
+        {}
         <div className="bg-white/[0.03] backdrop-blur-xl rounded-2xl p-6 border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.12)] xl:col-span-5 flex flex-wrap gap-5 items-center">
           <div className="flex flex-col gap-1.5 flex-1 min-w-[150px]">
             <label className="text-[11px] text-cyan-400 font-semibold uppercase tracking-widest flex items-center gap-1.5"><Layers size={12}/> Network Load</label>
@@ -159,9 +158,9 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Vital Metrics Row */}
+        {}
         <div className="xl:col-span-7 grid grid-cols-3 gap-4">
-           {/* Throughput */}
+           {}
            <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-5 border border-white/5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none transition-colors"></div>
              <div className="absolute -right-4 -top-4 text-emerald-500/10 group-hover:text-emerald-500/20 transition-colors pointer-events-none"><Zap size={64}/></div>
@@ -172,7 +171,7 @@ export default function Dashboard() {
              </div>
            </div>
            
-           {/* Drop Rate */}
+           {}
            <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-5 border border-white/5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
              <div className="absolute -right-4 -top-4 text-rose-500/10 group-hover:text-rose-500/20 transition-colors pointer-events-none"><TrendingDown size={64}/></div>
              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1 ml-1 z-10">Packet Loss %</p>
@@ -182,7 +181,7 @@ export default function Dashboard() {
              </div>
            </div>
 
-           {/* Queue Avg */}
+           {}
            <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-5 border border-white/5 flex flex-col justify-between shadow-lg relative overflow-hidden group">
              <div className="absolute -right-4 -top-4 text-cyan-500/10 group-hover:text-cyan-500/20 transition-colors pointer-events-none"><AlignVerticalSpaceAround size={64}/></div>
              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-1 ml-1 z-10">Avg Queue Size</p>
@@ -194,7 +193,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* New Area Chart for Bandwidth Delivery */}
+      {}
       <div className="bg-white/[0.02] backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-xl relative overflow-hidden group hover:border-cyan-500/20 transition-all">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-3xl pointer-events-none transition-colors"></div>
         <div className="border-b border-white/5 pb-4 mb-5 flex justify-between items-end">
@@ -238,9 +237,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Dual Charts Area (LineCharts) */}
+      {}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-         {/* Static System */}
+         {}
          <div className="bg-white/[0.02] backdrop-blur-md rounded-2xl p-6 border border-white/5 flex flex-col gap-5 shadow-xl">
            <div className="flex justify-between items-center">
              <h2 className="text-md font-bold text-gray-200 uppercase tracking-widest flex items-center gap-2"><Server size={14} className="text-gray-500"/> Static Legacy</h2>
@@ -261,7 +260,7 @@ export default function Dashboard() {
            </div>
          </div>
 
-         {/* Adaptive System */}
+         {}
          <div className="bg-cyan-500/[0.02] backdrop-blur-md rounded-2xl p-6 border border-cyan-500/20 flex flex-col gap-5 shadow-[0_0_30px_rgba(6,182,212,0.05)] relative overflow-hidden">
            <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
            
@@ -296,7 +295,7 @@ export default function Dashboard() {
          </div>
       </div>
       
-      {/* Terminal Logging Dashboard -> Dynamic Emulator Upgrade */}
+      {}
       <div className="bg-[#020202] rounded-2xl border border-white/10 flex flex-col overflow-hidden h-[300px] shadow-2xl font-mono text-sm relative">
          <div className="bg-white/5 border-b border-white/10 px-5 py-3 flex items-center justify-between">
            <div className="flex items-center gap-2">
@@ -311,7 +310,6 @@ export default function Dashboard() {
          </div>
          <div className="p-5 overflow-y-auto flex-1 text-[13px] leading-relaxed select-text tracking-wide break-words space-y-1">
            {logs.map((log, i) => {
-              // Regex color parsing for dynamic terminal
               const isWarning = log.includes('[WARNING]');
               const isError = log.includes('[ERROR]');
               const isSystem = log.includes('[SYSTEM]');

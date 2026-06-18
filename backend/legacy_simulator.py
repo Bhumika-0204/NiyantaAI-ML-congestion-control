@@ -8,11 +8,11 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict, Any, List
 
-# ---------------- PATHS ----------------
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODEL_PATH = os.path.join(BASE_DIR, "ml", "congestion_model.pkl")
 
-# Load model if it exists, otherwise provide a dummy for testing
+
 try:
     loaded_data = joblib.load(MODEL_PATH)
     if isinstance(loaded_data, dict) and "model" in loaded_data:
@@ -26,7 +26,7 @@ except Exception as e:
 
 app = FastAPI(title="ML Network Congestion Controller API")
 
-# Allow frontend to connect
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -38,7 +38,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ---------------- SIMULATION CORE CLASSES ----------------
+
 class Packet:
     def __init__(self, arrival_time: int):
         self.arrival_time = arrival_time
@@ -79,7 +79,7 @@ class SimulationSession:
         self.static_router = Router(bandwidth=8, max_queue_size=20)
         self.adaptive_router = Router(bandwidth=8, max_queue_size=20)
         
-        # Load Controls
+        
         self.load_profiles = {
             "low": 10,
             "medium": 20,
@@ -95,22 +95,22 @@ class SimulationSession:
     def tick(self) -> Dict[str, Any]:
         self.time_tick += 1
         
-        # Explicit Spike Injection for Non-Linear Realism
+        
         current_traffic = self.base_incoming
         import random
-        # 8% chance of a massive network burst spike
+        
         if random.random() < 0.08:
             current_traffic += random.randint(15, 35)
             
-        # 1. Static Simulation
+        
         self.static_router.receive_packets(current_traffic, self.time_tick)
         static_sent = self.static_router.send_packets()
         
-        # 2. Adaptive Simulation
+        
         adaptive_throttle_enacted = False
         probability = 0.0
         
-        # Formalized ML Integration
+        
         if model is not None:
             features = pd.DataFrame([{
                 "incoming_rate": self.adaptive_incoming,
@@ -125,7 +125,7 @@ class SimulationSession:
             else:
                 self.adaptive_incoming = min(self.adaptive_incoming + 1, self.base_incoming)
         else:
-            # Generate realistic mock probability based on load metrics
+            
             base_prob = len(self.adaptive_router.queue) / self.adaptive_router.max_queue_size
             probability = min(0.99, max(0.01, base_prob + random.uniform(-0.1, 0.2)))
             
@@ -138,7 +138,7 @@ class SimulationSession:
         self.adaptive_router.receive_packets(self.adaptive_incoming, self.time_tick)
         adaptive_sent = self.adaptive_router.send_packets()
         
-        # Record state
+        
         state = {
             "time": self.time_tick,
             "static": {
@@ -159,7 +159,7 @@ class SimulationSession:
         self.history.append(state)
         return state
 
-# ---------------- WEBSOCKET CONNECTION MANAGER ----------------
+
 class ConnectionManager:
     def __init__(self):
         self.active_connections: Dict[str, WebSocket] = {}
@@ -184,13 +184,13 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
-# ---------------- API ENDPOINTS ----------------
+
 
 @app.get("/metrics")
 def get_metrics():
     """ Aggregate metrics across all sessions / latest history, or specific results """
-    # For a real metrics API, we might average stats from the most recent run
-    # Let's mock a structured response based on the design requirement
+    
+    
     return {
         "status": "online",
         "description": "System operational. Achieved >30% reduction in packet loss and ~15-20% improvement in throughput under high-load simulated conditions typically.",
@@ -202,7 +202,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
     await manager.connect(client_id, websocket)
     try:
         while True:
-            # We wait for the client to send a command
+            
             data = await websocket.receive_json()
             
             command = data.get("action")
@@ -212,16 +212,16 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
                 
                 session = manager.sessions[client_id]
                 
-                # Run the simulation ticks
+                
                 for _ in range(100):
                     if not session.is_running:
                         break
                         
                     tick_state = session.tick()
                     await websocket.send_json({"type": "tick", "data": tick_state})
-                    await asyncio.sleep(0.1) # 100ms per tick for real-time visual flow
+                    await asyncio.sleep(0.1) 
                 
-                # Send completion
+                
                 await websocket.send_json({"type": "complete", "message": "Simulation finished."})
                 session.is_running = False
 
@@ -234,7 +234,7 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
         print(f"Client {client_id} disconnected unexpectedly.")
         manager.disconnect(client_id)
     except Exception as e:
-        # Failure Handling: Catch and manage unexpected disconnects
+        
         print(f"Error handling websocket for {client_id}: {str(e)}")
         manager.disconnect(client_id)
 

@@ -10,12 +10,12 @@ class ExecutionAgent:
     Stores policy verdicts and manages the Deny-list for the Gateway.
     """
     def __init__(self):
-        # Format: IP -> { "action": "throttle|block", "expires_at": float }
+        
         self.decision_cache: Dict[str, Dict[str, Any]] = {}
         self.blocklist = set()
-        # Live security event log (last 100 events) for the dashboard
+        
         self.security_events: deque = deque(maxlen=100)
-        # Counters
+        
         self.total_blocked = 0
         self.total_throttled = 0
         self.total_allowed = 0
@@ -59,7 +59,7 @@ class ExecutionAgent:
     def get_security_summary(self) -> dict:
         """Returns live security data for the frontend dashboard."""
         now = time.time()
-        # Count blocks in the last hour
+        
         recent_blocks = sum(
             1 for e in self.security_events
             if e["action"] == "block" and (now - e["timestamp"]) < 3600
@@ -67,7 +67,7 @@ class ExecutionAgent:
         total_decisions = max(self.total_allowed + self.total_blocked + self.total_throttled, 1)
         integrity = round(((total_decisions - self.total_blocked) / total_decisions) * 100, 1)
         
-        # Format events for frontend
+        
         events = []
         for e in list(self.security_events)[:20]:
             age_sec = now - e["timestamp"]

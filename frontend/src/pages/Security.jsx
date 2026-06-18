@@ -23,7 +23,7 @@ export default function Security() {
 
   useEffect(() => {
     fetchEvents();
-    const interval = setInterval(fetchEvents, 3000); // Poll every 3 seconds
+    const interval = setInterval(fetchEvents, 3000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -52,7 +52,7 @@ export default function Security() {
         </button>
       </header>
 
-      {/* Stats Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-gray-900 border border-red-500/20 rounded-xl p-6">
           <div className="flex justify-between items-center mb-4">
@@ -91,7 +91,7 @@ export default function Security() {
         </div>
       </div>
       
-      {/* Live Events Table */}
+      {}
       <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
         <div className="p-6 border-b border-gray-800 flex items-center justify-between">
            <h3 className="text-xl font-bold">Live Security Events</h3>

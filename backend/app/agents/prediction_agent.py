@@ -24,13 +24,13 @@ class PredictionAgent:
                 "error_rate": error_rate,
                 "dropped_packets": dropped_packets
             }])
-            # Provide missing feature fallback if exact shape differs from training
+            
             expected_features = ["incoming_rate", "queue_length", "sent_packets", "dropped_packets"]
             for col in expected_features:
                 if col not in features.columns:
                     features[col] = 0.0
             
-            # Sub-select matching features used by the original model (based on main.py check)
+            
             try:
                 features_for_model = features[expected_features]
                 probability = self.model.predict_proba(features_for_model)[0][1]
@@ -39,7 +39,7 @@ class PredictionAgent:
                 print(f"⚠️ Prediction error: {e}")
                 pass
         
-        # Fallback Heuristic if ML fails or is unavailable
+        
         base_risk = min(1.0, (queue_length / 100.0) + (dropped_packets / 10.0) + (error_rate * 2))
         return base_risk
 

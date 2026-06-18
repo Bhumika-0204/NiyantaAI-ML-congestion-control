@@ -3,8 +3,8 @@ import asyncio
 import logging
 from typing import Tuple, Dict
 
-# Assuming aioredis or redis.asyncio is used in production
-# import redis.asyncio as redis
+
+
 
 logger = logging.getLogger("DistLimiter")
 
@@ -13,7 +13,7 @@ class CircuitBreaker:
     Standard state machine for mitigating cascade failures during Redis outages.
     """
     def __init__(self, failure_threshold: int = 5, recovery_timeout_sec: int = 30):
-        self.state = "CLOSED"  # CLOSED = OK, OPEN = FAILING, HALF-OPEN = TEST
+        self.state = "CLOSED"  
         self.failures = 0
         self.threshold = failure_threshold
         self.timeout = recovery_timeout_sec
@@ -38,7 +38,7 @@ class CircuitBreaker:
                 self.state = "HALF-OPEN"
                 return True
             return False
-        # HALF-OPEN allows one request through to test if Redis recovered
+        
         return True
 
 
@@ -48,9 +48,9 @@ class DistributedRateLimiter:
     Includes a highly-available Local LRU Dict fallback to ensure 100% gateway uptime.
     """
     
-    # ATOMIC LUA SCRIPT: Token Bucket execution
-    # Keys: [rate_limit_key]
-    # Args: [capacity, replenishment_rate_per_sec, current_time_sec]
+    
+    
+    
     LUA_SCRIPT = """
     local key = KEYS[1]
     local capacity = tonumber(ARGV[1])
@@ -86,10 +86,10 @@ class DistributedRateLimiter:
     def __init__(self, redis_pool=None):
         self.redis = redis_pool
         self.circuit_breaker = CircuitBreaker()
-        self.local_fallback_cache: Dict[str, dict] = {} # In-memory LRU fallback
+        self.local_fallback_cache: Dict[str, dict] = {} 
         
-        # In a real environment, we use register_script
-        # self.sha = self.redis.register_script(self.LUA_SCRIPT)
+        
+        
 
     async def _fallback_in_memory_check(self, key: str, capacity: int, refill_rate: int) -> Tuple[bool, int]:
         """ Executes standard token bucket logic locally if Redis is dead. """
@@ -121,19 +121,19 @@ class DistributedRateLimiter:
             return await self._fallback_in_memory_check(key, capacity, refill_rate)
 
         try:
-            # Emulated Redis evaluation
-            # result = await self.sha(keys=[key], args=[capacity, refill_rate, now])
-            # allowed, remaining = result[0] == 1, result[1]
             
-            allowed, remaining = True, capacity # Dev Stand-in
+            
+            
+            
+            allowed, remaining = True, capacity 
             self.circuit_breaker.record_success()
             return allowed, remaining
             
         except Exception as e:
             logger.error(f"Redis Connection Failed: {e}")
             self.circuit_breaker.record_failure()
-            # Immediately fallback recursively
+            
             return await self._fallback_in_memory_check(key, capacity, refill_rate)
 
-# Instantiated globally for FastAPI dependency injection
+
 limiter = DistributedRateLimiter()

@@ -31,33 +31,33 @@ class KafkaAnomalyConsumer:
         """
         logger.info(f"Kafka Anomaly Consumer starting → subscribed to '{self.input_topic}'")
         
-        # --- PRODUCTION CODE (uncomment and install aiokafka) ---
-        # from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
-        # consumer = AIOKafkaConsumer(
-        #     self.input_topic,
-        #     bootstrap_servers=self.bootstrap_servers,
-        #     group_id="anomaly_detection_group",
-        #     auto_offset_reset="latest",
-        # )
-        # producer = AIOKafkaProducer(bootstrap_servers=self.bootstrap_servers)
-        # await consumer.start()
-        # await producer.start()
-        # try:
-        #     async for msg in consumer:
-        #         telemetry = json.loads(msg.value)
-        #         result = anomaly_detector.analyze(telemetry)
-        #         if result["is_anomaly"]:
-        #             alert_payload = json.dumps({
-        #                 "ip": telemetry.get("ip"),
-        #                 "threat_level": result["threat_level"],
-        #                 "anomaly_score": result["anomaly_score"],
-        #             }).encode()
-        #             await producer.send_and_wait(self.output_topic, alert_payload)
-        # finally:
-        #     await consumer.stop()
-        #     await producer.stop()
         
-        # --- MOCK for local development without Kafka ---
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         await self._mock_consume_loop()
 
     async def _mock_consume_loop(self):

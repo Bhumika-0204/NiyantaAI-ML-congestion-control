@@ -17,5 +17,5 @@ class ReplayBuffer:
     def size(self) -> int:
         return len(self.buffer)
 
-# Global buffer for now; in prod this would dump to Redis/Postgres
+
 global_replay_buffer = ReplayBuffer(capacity=100000)

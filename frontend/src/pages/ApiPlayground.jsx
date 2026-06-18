@@ -6,7 +6,6 @@ export default function ApiPlayground() {
   const [liveMetrics, setLiveMetrics] = useState(null);
   const [customPayload, setCustomPayload] = useState('');
 
-  // Connect to WebSocket to get live metrics for the payload
   useEffect(() => {
     const wsUrl = import.meta.env.VITE_API_URL 
         ? import.meta.env.VITE_API_URL.replace(/^http/, 'ws').replace('/api/v1', '') + '/ws/playground-client'
@@ -17,7 +16,6 @@ export default function ApiPlayground() {
     ws.onmessage = (event) => {
       const payload = JSON.parse(event.data);
       setLiveMetrics(payload.metrics);
-      // Auto-update the payload display with real metrics
       const realPayload = {
         ip: "127.0.0.1",
         metrics: {
@@ -67,7 +65,7 @@ export default function ApiPlayground() {
         <p className="text-gray-400 mt-2 pl-14">Test REST endpoints with live system metrics.</p>
       </header>
 
-      {/* Live metrics indicator */}
+      {}
       {liveMetrics && (
         <div className="bg-gray-900 border border-sky-500/20 rounded-xl p-4 mb-6 flex items-center gap-3">
           <Activity size={16} className="text-sky-400" />
@@ -86,7 +84,7 @@ export default function ApiPlayground() {
           <p className="text-sm text-gray-400 mb-4">Sending live system metrics to the Prediction and Policy agents.</p>
           
           <textarea
-            value={customPayload || '// Waiting for live metrics...'}
+            value={customPayload || '{}'}
             onChange={(e) => setCustomPayload(e.target.value)}
             className="bg-gray-950 p-4 rounded-lg font-mono text-sm text-emerald-400 flex-1 border border-gray-800 leading-relaxed resize-none focus:outline-none focus:border-sky-500"
             rows={12}
@@ -100,7 +98,7 @@ export default function ApiPlayground() {
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 flex flex-col hover:border-gray-700 transition duration-300">
           <h3 className="font-bold text-lg mb-4 text-gray-200">Response Data</h3>
           <div className="bg-[#0b0e14] p-5 rounded-lg font-mono text-sm flex-1 border border-gray-800 overflow-y-auto whitespace-pre-wrap text-emerald-300 shadow-inner block">
-            {response || <span className="text-gray-600 italic">// Waiting for request...</span>}
+            {response || <span className="text-gray-600 italic">Awaiting execution...</span>}
           </div>
         </div>
       </div>

@@ -72,12 +72,12 @@ export default function SidebarLayout() {
   return (
     <div className="flex z-[9999] h-screen bg-[#050505] text-gray-200 font-sans overflow-hidden selection:bg-cyan-500/30 relative">
       
-      {/* Massive Background Watermark */}
+      {}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-[0.04] select-none overflow-hidden mix-blend-overlay">
         <h1 className="text-[25vw] font-black text-white whitespace-nowrap -rotate-12 tracking-tight">NIYANTA</h1>
       </div>
 
-      {/* Sidebar (Glassmorphic) */}
+      {}
       <aside className="w-64 bg-[#050505]/90 backdrop-blur-2xl border-r border-white/5 flex flex-col shrink-0 relative shadow-[10px_0_30px_rgba(0,0,0,0.5)] z-40">
         <div className="p-6 border-b border-white/5 flex items-center gap-3 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -136,10 +136,10 @@ export default function SidebarLayout() {
         </div>
       </aside>
 
-      {/* Main Content Area */}
+      {}
       <main className="flex-1 flex flex-col relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-900/30 via-transparent to-transparent z-10">
         
-        {/* Advanced Global Header */}
+        {}
         <header className="h-24 border-b border-white/5 bg-[#050505]/70 backdrop-blur-2xl shrink-0 flex items-center justify-between px-8 z-30 sticky top-0 relative">
           <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
           
@@ -162,7 +162,7 @@ export default function SidebarLayout() {
           
           <div className="flex items-center gap-6">
             
-            {/* Working Command Bar Search */}
+            {}
             <div className="relative hidden xl:block z-50" ref={searchContainerRef}>
               <Search className={`absolute left-4 top-1/2 -translate-y-1/2 ${showSearch ? 'text-cyan-400' : 'text-gray-500'} transition-colors duration-200`} size={16} />
               <input 
@@ -179,7 +179,7 @@ export default function SidebarLayout() {
                 <div className="text-[10px] font-mono font-bold text-gray-500 bg-black/50 px-1.5 py-0.5 rounded border border-white/5">K</div>
               </div>
               
-              {/* Search Dropdown Results Panel */}
+              {}
               {showSearch && (
                 <div className="absolute top-14 left-0 w-full bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] py-2 animate-in fade-in slide-in-from-top-2 duration-150 border-t-cyan-500/30 overflow-hidden">
                   <div className="px-4 py-2 text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-1">
@@ -217,7 +217,7 @@ export default function SidebarLayout() {
               )}
             </div>
             
-            {/* Notification Dropdown */}
+            {}
             <div className="relative" ref={notifRef}>
               <button 
                 onClick={() => setShowNotif(!showNotif)}
@@ -261,7 +261,7 @@ export default function SidebarLayout() {
               )}
             </div>
 
-            {/* Profile Dropdown */}
+            {}
             <div className="relative" ref={profileRef}>
               <div 
                 onClick={() => setShowProfile(!showProfile)}
@@ -300,17 +300,17 @@ export default function SidebarLayout() {
           </div>
         </header>
 
-        {/* Scrollable Page Content */}
+        {}
         <div className="flex-1 overflow-y-auto scroll-smooth flex flex-col z-20">
            <div className="flex-1 p-8">
               <Outlet />
            </div>
            
-           {/* Minimal Centered Bootstrap-style Footer */}
+           {}
            <footer className="mt-auto py-10 z-20 relative">
              <div className="max-w-4xl mx-auto px-6 flex flex-col items-center">
                
-               {/* Nav Links */}
+               {}
                <div className="flex flex-wrap justify-center gap-6 md:gap-8 text-[14px] text-gray-400 font-medium mb-6">
                  <span className="cursor-pointer hover:text-white hover:underline underline-offset-4 transition-all">Home</span>
                  <span className="cursor-pointer hover:text-white hover:underline underline-offset-4 transition-all">Features</span>
@@ -319,10 +319,10 @@ export default function SidebarLayout() {
                  <span className="cursor-pointer hover:text-white hover:underline underline-offset-4 transition-all">About</span>
                </div>
                
-               {/* Divider Line */}
+               {}
                <div className="w-full h-px bg-white/[0.08] mb-6 shadow-[0_1px_0_rgba(0,0,0,0.5)]"></div>
                
-               {/* Copyright */}
+               {}
                <div className="text-[14px] text-gray-400 font-medium tracking-wide">
                  © 2026 Niyanta AI, Inc
                </div>

@@ -5,7 +5,7 @@ def setup_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
     
-    # Avoid duplicating handlers
+    
     if getattr(logger, 'handlers', []):
         return logger
         

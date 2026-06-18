@@ -19,21 +19,21 @@ from concurrent.futures import ThreadPoolExecutor
 
 API_BASE = "http://localhost:8000/api/v1"
 
-# Simulated IP addresses
+
 NORMAL_IPS = [
     "203.0.113.10", "203.0.113.11", "203.0.113.12",
     "198.51.100.5", "198.51.100.6"
 ]
 
 ATTACKER_IPS = [
-    "45.33.32.156",    # Simulated botnet node 1
-    "185.220.101.33",  # Simulated botnet node 2  
-    "91.240.118.222",  # Simulated scanner
-    "23.129.64.100",   # Simulated Tor exit node
-    "171.25.193.20",   # Simulated brute force
-    "62.102.148.68",   # Simulated DDoS amplifier
-    "185.56.80.65",    # Simulated port scanner
-    "45.155.205.233",  # Simulated credential stuffer
+    "45.33.32.156",    
+    "185.220.101.33",  
+    "91.240.118.222",  
+    "23.129.64.100",   
+    "171.25.193.20",   
+    "62.102.148.68",   
+    "185.56.80.65",    
+    "45.155.205.233",  
 ]
 
 COLORS = {
@@ -92,7 +92,7 @@ def ddos_spike():
     """Simulate DDoS attack — massive rate from attacker IP."""
     ip = random.choice(ATTACKER_IPS)
     metrics = {
-        "incoming_rate": random.randint(8000, 50000),  # Massive spike
+        "incoming_rate": random.randint(8000, 50000),  
         "cpu_percent": random.uniform(85, 99),
         "memory_percent": random.uniform(80, 95),
         "latency": random.uniform(500, 3000),
@@ -110,7 +110,7 @@ def slowloris_attack():
         "incoming_rate": random.randint(5, 30),
         "cpu_percent": random.uniform(60, 80),
         "memory_percent": random.uniform(70, 90),
-        "latency": random.uniform(2000, 10000),  # Very high latency
+        "latency": random.uniform(2000, 10000),  
         "error_rate": random.uniform(0.05, 0.15),
         "queue_length": random.randint(70, 95),
         "dropped_packets": random.randint(10, 30),
@@ -120,13 +120,13 @@ def slowloris_attack():
 
 def brute_force():
     """Simulate brute force login — high rate from single IP."""
-    ip = ATTACKER_IPS[4]  # Always same IP = suspicious
+    ip = ATTACKER_IPS[4]  
     metrics = {
         "incoming_rate": random.randint(3000, 8000),
         "cpu_percent": random.uniform(70, 90),
         "memory_percent": random.uniform(50, 70),
         "latency": random.uniform(100, 400),
-        "error_rate": random.uniform(0.3, 0.8),  # High error = failed logins
+        "error_rate": random.uniform(0.3, 0.8),  
         "queue_length": random.randint(40, 80),
         "dropped_packets": random.randint(5, 20),
         "bytes_recv_rate": random.randint(10000, 100000),
@@ -173,19 +173,19 @@ def print_stats():
 def run_simulation():
     print_header()
     
-    # Phase 1: Normal traffic warm-up
+    
     print(f"{COLORS['blue']}[Phase 1] Normal traffic warm-up (10 requests)...{COLORS['reset']}")
     for _ in range(10):
         normal_traffic()
         time.sleep(0.3)
 
-    # Phase 2: DDoS attack begins
+    
     print(f"\n{COLORS['red']}[Phase 2] 🚨 DDoS ATTACK STARTING — 20 spike requests...{COLORS['reset']}")
     for _ in range(20):
         ddos_spike()
         time.sleep(0.15)
 
-    # Phase 3: Mixed attack + normal
+    
     print(f"\n{COLORS['yellow']}[Phase 3] Mixed traffic — attacks + normal users...{COLORS['reset']}")
     for _ in range(30):
         roll = random.random()
@@ -201,14 +201,14 @@ def run_simulation():
             port_scan()
         time.sleep(0.2)
 
-    # Phase 4: Massive coordinated attack
+    
     print(f"\n{COLORS['red']}[Phase 4] 🔥 COORDINATED BOTNET ATTACK — 8 IPs simultaneously...{COLORS['reset']}")
     with ThreadPoolExecutor(max_workers=8) as pool:
         for _ in range(40):
             pool.submit(ddos_spike)
             time.sleep(0.05)
 
-    # Phase 5: Recovery — normal traffic
+    
     print(f"\n{COLORS['green']}[Phase 5] Attack stopped. Normal traffic resuming...{COLORS['reset']}")
     for _ in range(10):
         normal_traffic()

@@ -25,7 +25,7 @@ function App() {
   return (
     <Router>
       <div className="flex h-screen bg-gray-950 text-white font-sans overflow-hidden">
-        {/* Sidebar */}
+        {}
         <nav className="w-64 bg-gray-900 border-r border-gray-800 flex-col hidden md:flex">
           <div className="p-6 border-b border-gray-800">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent transform scale-105 origin-left">
@@ -43,7 +43,7 @@ function App() {
           </div>
         </nav>
 
-        {/* Main Content */}
+        {}
         <main className="flex-1 flex flex-col h-full relative overflow-y-auto w-full">
           <Routes>
             <Route path="/" element={<Dashboard />} />

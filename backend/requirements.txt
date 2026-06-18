@@ -1,37 +1,17 @@
 fastapi[all]
 uvicorn
-grpcio>=1.62.0
-grpcio-tools>=1.62.0
 PyJWT>=2.8.0
 pandas
 scikit-learn
 joblib
 pytest
 httpx
-redis
-
-# === Enterprise Distributed Rate Limiting ===
-redis.asyncio>=4.6.0
+redis>=4.6.0
+psutil>=5.9.0
 
 # === Reinforcement Learning (PPO) ===
 torch>=2.0.0
 numpy>=1.24.0
-
-# === Anomaly Detection (DDoS / Isolation Forest) ===
-# (scikit-learn covers Isolation Forest)
-
-# === MLOps ===
-mlflow>=2.10.0
-shap>=0.43.0
-
-# === Observability & Tracing ===
-prometheus-client>=0.19.0
-opentelemetry-api>=1.20.0
-opentelemetry-sdk>=1.20.0
-opentelemetry-instrumentation-fastapi>=0.42b0
-
-# === Event Streaming (Kafka) ===
-aiokafka>=0.9.0
 
 # === Explainability (RAG / ChromaDB) ===
 chromadb>=0.4.0

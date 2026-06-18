@@ -9,7 +9,6 @@ export default function AiInsights() {
   const [liveAnomaly, setLiveAnomaly] = useState(false);
   const wsRef = useRef(null);
 
-  // Connect to WebSocket for live metrics (same stream as Dashboard)
   useEffect(() => {
     const wsUrl = import.meta.env.VITE_API_URL 
         ? import.meta.env.VITE_API_URL.replace(/^http/, 'ws').replace('/api/v1', '') + '/ws/ai-insights-client'
@@ -33,7 +32,6 @@ export default function AiInsights() {
       try {
           const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
           
-          // Use REAL live metrics from WebSocket, not hardcoded values
           const metricsToSend = liveMetrics || {
               cpu_percent: 0, memory_percent: 0, incoming_rate: 0, bytes_recv_rate: 0
           };
@@ -59,7 +57,7 @@ export default function AiInsights() {
               metrics: { ...metricsToSend }
             },
             ...prev
-          ].slice(0, 10)); // Keep last 10 insights
+          ].slice(0, 10)); 
       } catch (err) {
           setInsights(prev => [
             { id: Date.now(), title: 'Backend Unreachable', desc: `Could not connect to reasoning engine: ${err.message}. Ensure the backend is running on port 8000.`, time: new Date().toLocaleTimeString(), action: 'error', metrics: {} },
@@ -92,7 +90,7 @@ export default function AiInsights() {
         </button>
       </header>
 
-      {/* Live Metrics Preview */}
+      {}
       {liveMetrics && (
         <div className="bg-gray-900 border border-purple-500/20 rounded-xl p-5 mb-8">
           <div className="flex items-center gap-2 mb-3">

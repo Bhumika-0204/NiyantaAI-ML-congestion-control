@@ -4,6 +4,7 @@ from typing import Dict
 
 from app.agents.monitoring_agent import monitor
 from app.agents.multi_agent_coordinator import coordinator
+from app.agents.policy_agent import policy_agent
 from app.core.logger import logger
 
 ws_router = APIRouter()
@@ -37,22 +38,24 @@ async def live_device_monitoring_task():
     evaluates it using the ML Policy Agent, and streams it to the dashboard.
     """
     while True:
-        if manager.active_connections: # Only consume CPU to calculate/push if someone is watching
+        if manager.active_connections: 
             metrics = monitor.collect_live_device_metrics()
             
-            # Evaluate using the predictive decision engine
-            # decision = policy_agent.evaluate_request("HOST_DEVICE", metrics)
+            
+            
             agent_decision = await coordinator.get_joint_action(metrics)
+            decision = policy_agent.evaluate_request("HOST_DEVICE", metrics)
             
             payload = {
                 "metrics": metrics,
                 "multi_agent_decision": agent_decision,
+                "decision": decision,
                 "anomaly_score": agent_decision.get("strictness", 0),
                 "active_connections": len(manager.active_connections)
             }
             await manager.broadcast(payload)
             
-        await asyncio.sleep(1.0) # Refresh rate
+        await asyncio.sleep(1.0) 
 
 @ws_router.websocket("/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: str):

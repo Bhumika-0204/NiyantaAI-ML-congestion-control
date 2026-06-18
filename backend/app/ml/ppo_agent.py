@@ -3,7 +3,7 @@ import time
 import numpy as np
 from typing import Dict, Tuple
 
-# PyTorch is optional — server starts in heuristic mode without it
+
 try:
     import torch
     import torch.nn as nn
@@ -82,7 +82,7 @@ class PPOInferenceAgent:
                 mapping = {0: "allow", 1: "throttle", 2: "block"}
                 return mapping.get(action_idx, "allow")
         
-        # Heuristic fallback (no PyTorch)
+        
         cpu = telemetry.get("cpu", 0.0)
         req_rate = telemetry.get("request_rate", 0.0)
         latency = telemetry.get("latency_ms", 0.0)
@@ -93,9 +93,9 @@ class PPOInferenceAgent:
             return "throttle"
         return "allow"
 
-# =======================================================
-# TRAINING PIPELINE & REWARD DESIGN (OFFLINE ALGORITHM)
-# =======================================================
+
+
+
 """
 In the offline ML training pipeline (pulled from Kafka logs), the agent explores 
 an environment constructed from historical telemetry.
@@ -115,5 +115,5 @@ def calculate_reward(throughput: float, latency_ms: float, system_crashed: bool)
     return reward
 """
 
-# Singleton instance to be imported by FastAPI routes
+
 ppo_agent = PPOInferenceAgent()

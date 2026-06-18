@@ -12,7 +12,7 @@ class TrafficGatewayMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         client_ip = request.client.host or "unknown"
         
-        # 1. Ask Execution Agent for immediate verdict (cache lookup)
+        
         action = execution_agent.get_action(client_ip)
         
         if action == "block":
@@ -21,12 +21,12 @@ class TrafficGatewayMiddleware(BaseHTTPMiddleware):
             
         is_throttled = (action == "throttle")
         
-        # 2. Token Bucket Rate Limiting Enforcer
+        
         if not rate_limiter_manager.is_allowed(client_ip, throttle=is_throttled):
             logger.warning(f"Gateway: Rate limiting activated. IP {client_ip} (Throttled mode: {is_throttled})")
             return JSONResponse(status_code=429, content={"detail": "Too many requests. Please slow down. Rate limit exceeded."})
         
-        # 3. Request Monitoring Core
+        
         monitor.log_request()
         start_time = time.time()
         
@@ -37,7 +37,7 @@ class TrafficGatewayMiddleware(BaseHTTPMiddleware):
             logger.error(f"Gateway: Unhandled request error {e}")
             raise e
             
-        process_time = (time.time() - start_time) * 1000 # convert to ms
+        process_time = (time.time() - start_time) * 1000 
         
         monitor.end_request()
         response.headers["X-Process-Time"] = str(round(process_time, 2))

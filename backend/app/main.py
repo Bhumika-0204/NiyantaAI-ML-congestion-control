@@ -1,7 +1,7 @@
 import os
 import sys
 
-# Ensure the backend directory is in the PYTHONPATH
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import asyncio
@@ -22,23 +22,23 @@ from app.plugins.manager import plugin_manager
 from app.plugins.impl.red_plugin import REDPlugin
 from app.plugins.impl.codel_plugin import CoDelPlugin
 
-# Register plugins
+
 plugin_manager.register("RED", REDPlugin())
 plugin_manager.register("CoDel", CoDelPlugin())
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # 1. Spin up the background thread to poll the OS for network traffic
+    
     monitoring_task = asyncio.create_task(live_device_monitoring_task())
-    # 2. Spin up the Kafka anomaly detection consumer loop (DDoS pipeline)
+    
     kafka_task = asyncio.create_task(kafka_anomaly_consumer.start())
-    # 3. Register SIGTERM handler for graceful connection draining
+    
     loop = asyncio.get_event_loop()
     for sig in (signal.SIGTERM, signal.SIGINT):
         try:
             loop.add_signal_handler(sig, trigger_connection_draining)
         except NotImplementedError:
-            pass  # Windows doesn't support add_signal_handler
+            pass  
     yield
     trigger_connection_draining()
     monitoring_task.cancel()
@@ -57,13 +57,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Attach Network Protection Layer (outermost — fires first on every request)
+
 app.add_middleware(NetworkProtectionMiddleware)
 
-# Attach Zero Trust Auth
+
 app.add_middleware(ZeroTrustMiddleware)
 
-# Attach API Gateway Interceptor (ML policy engine)
+
 app.add_middleware(TrafficGatewayMiddleware)
 
 app.include_router(api_router, prefix="/api/v1")

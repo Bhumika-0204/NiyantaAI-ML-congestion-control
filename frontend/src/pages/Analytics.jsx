@@ -78,7 +78,7 @@ export default function Analytics() {
         </div>
       </header>
 
-      {/* Live Stat Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
           <p className="text-sm text-gray-400 mb-1">Total Decisions</p>
@@ -102,7 +102,7 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* Live Streaming Line Chart */}
+      {}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-xl font-semibold text-gray-200 flex items-center gap-2">
@@ -137,7 +137,7 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* Cumulative Bar Chart */}
+      {}
       <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
         <h3 className="text-xl font-semibold mb-6 text-gray-200">Cumulative Decision Breakdown</h3>
         <div style={{ width: '100%', height: 300 }}>

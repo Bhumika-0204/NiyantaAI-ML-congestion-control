@@ -2,10 +2,10 @@ import asyncio
 from typing import Dict
 
 REGION_LATENCIES: Dict[str, float] = {
-    "US-EAST": 0.02, # 20ms
-    "US-WEST": 0.06, # 60ms
-    "EU-WEST": 0.09, # 90ms
-    "AP-SOUTH": 0.15 # 150ms
+    "US-EAST": 0.02, 
+    "US-WEST": 0.06, 
+    "EU-WEST": 0.09, 
+    "AP-SOUTH": 0.15 
 }
 
 async def simulate_region_latency(region: str):

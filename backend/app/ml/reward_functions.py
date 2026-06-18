@@ -5,12 +5,12 @@ def calculate_reward(throughput: float, latency: float, pod_count: int, throttle
     """
     weight_throughput = 1.0
     weight_latency = -0.5
-    weight_cost = -0.3 # Negative penalty for scaling up 
+    weight_cost = -0.3 
     
     cost_penalty = pod_count * weight_cost
     reward = (throughput * weight_throughput) + (latency * weight_latency) + cost_penalty
     
     if throttled:
-        reward -= 2.0 # Penalty for dropping legitimate requests
+        reward -= 2.0 
         
     return reward
