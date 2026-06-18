@@ -17,7 +17,9 @@ import random
 import threading
 from concurrent.futures import ThreadPoolExecutor
 
-API_BASE = "http://localhost:8000/api/v1"
+import sys
+
+API_BASE = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8000/api/v1"
 
 
 NORMAL_IPS = [
