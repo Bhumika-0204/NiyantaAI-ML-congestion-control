@@ -15,6 +15,8 @@ services:
           type: redis
           name: niyanta-redis
           property: port
+      - key: PORT
+        value: 8000
       - key: SECRET_KEY
         generateValue: true
       - key: OPENAI_API_KEY
