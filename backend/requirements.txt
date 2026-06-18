@@ -10,12 +10,17 @@ redis>=4.6.0
 psutil>=5.9.0
 
 # === Reinforcement Learning (PPO) ===
-torch>=2.0.0
+# Commented out for free tier deployment to prevent Out of Memory errors.
+# The code handles missing PyTorch and falls back to heuristic ML.
+# torch>=2.0.0
 numpy>=1.24.0
 
 # === Explainability (RAG / ChromaDB) ===
-chromadb>=0.4.0
+# Commented out for free tier deployment to prevent hnswlib compile OOM errors.
+# The code handles missing chromadb and falls back to mock RAG context.
+# chromadb>=0.4.0
 openai>=1.0.0
 
 # === Benchmarking ===
-locust>=2.20.0
+# Commented out for free tier deployment. Locust is only needed locally for tests.
+# locust>=2.20.0

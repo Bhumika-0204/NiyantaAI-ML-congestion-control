@@ -1,6 +1,11 @@
 import os
-import chromadb
 from app.core.logger import logger
+
+try:
+    import chromadb
+    CHROMADB_AVAILABLE = True
+except ImportError:
+    CHROMADB_AVAILABLE = False
 
 class RAGService:
     """
@@ -8,6 +13,13 @@ class RAGService:
     """
     def __init__(self):
         self.db_path = os.getenv("CHROMA_DB_PATH", "./data/vector_store")
+        if not CHROMADB_AVAILABLE:
+            self.client = None
+            self.collection = None
+            self.is_initialized = False
+            logger.warning("RAGService: chromadb package not installed. Running in mock mode.")
+            return
+            
         try:
             self.client = chromadb.PersistentClient(path=self.db_path)
             self.collection = self.client.get_or_create_collection(name="network_docs")
